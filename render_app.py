@@ -4,8 +4,8 @@ import requests
 app = Flask(__name__)
 
 # Replace with your Raspberry Pi's IP or domain
-PI_API_URL = "http://your-pi-ip:5000/control"
-SECRET_KEY = "your-secret-key"
+PI_API_URL = "http://192.168.0.10:5000/control"
+SECRET_KEY = "meow"
 
 def send_command(state):
     """Send ON/OFF command to Raspberry Pi API"""
