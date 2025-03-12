@@ -4,12 +4,12 @@ import RPi.GPIO as GPIO
 app = Flask(__name__)
 
 # GPIO Setup
-LED_PIN = 18
+LED_PIN = 21
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(LED_PIN, GPIO.OUT)
 
 # Secret key for authentication
-SECRET_KEY = "your-secret-key"
+SECRET_KEY = "meow"
 
 @app.route("/control", methods=["POST"])
 def control_led():
