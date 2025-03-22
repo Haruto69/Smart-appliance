@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 # Replace with your Raspberry Pi's IP or domain
-PI_API_URL = "http://169.254.128.103:5000/control"
+PI_API_URL = "http://192.168.0.198:5000/control"
 SECRET_KEY = "meow"
 
 def send_command(state):
