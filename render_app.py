@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.secret_key = "S3cUr3!K3y@2025#RNS"
 
 # Raspberry Pi API URL (Change this to your Pi's actual IP address)
-PI_API_URL = "http://192.168.0.191:5000/control"
+PI_API_URL = "http://192.168.0.191:5001/control"
 
 USERNAME = "admin"
 PASSWORD = "password"
