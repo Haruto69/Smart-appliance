@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Campus - Light Control</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='config.js') }}"></script> <!-- Load config -->
 </head>
 <body>
 
@@ -28,7 +29,6 @@
             let bulb = document.getElementById('bulb');
             let statusText = document.getElementById('status');
 
-            // Update UI immediately
             if (state === 'on') {
                 bulb.classList.add("on");
                 statusText.innerText = "Status: ON";
@@ -37,11 +37,8 @@
                 statusText.innerText = "Status: OFF";
             }
 
-            // Replace 'https://your-render-app-url.com' with your actual Render backend URL
-            let apiUrl = "https://your-render-app-url.com/control/light/" + state;
-
-            // Send request to Render backend, which forwards it to the Raspberry Pi
-            fetch(apiUrl, {
+            // Send request to Raspberry Pi via ngrok
+            fetch(NGROK_URL + '/control/light/' + state, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             })
