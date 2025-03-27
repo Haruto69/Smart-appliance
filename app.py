@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_ngrok import run_with_ngrok
 import RPi.GPIO as GPIO
 
 app = Flask(__name__)
-
+run_with_ngrok(app)
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
@@ -34,6 +35,6 @@ def control_device(device, state):
 
 if __name__ == "__main__":
     try:
-        app.run(host="0.0.0.0", port=5000, debug=True)
+        app.run()
     except KeyboardInterrupt:
         GPIO.cleanup()
