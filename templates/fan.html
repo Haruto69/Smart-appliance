@@ -5,23 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Campus - Fan Control</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='config.js') }}"></script> <!-- Load config -->
 </head>
 <body>
 
-    <div class="container">
-        <h1>Smart Campus - Fan Control</h1>
+    <h1>Smart Campus - Fan Control</h1>
 
-        <div class="fan-container">
-            <div class="fan-blades" id="fan"></div>
-        </div>
-
-        <p class="status" id="status">Status: OFF</p>
-
-        <div class="button-group">
-            <button class="on" onclick="controlFan('on')">Turn ON</button>
-            <button class="off" onclick="controlFan('off')">Turn OFF</button>
-        </div>
+    <div class="fan-container">
+        <div class="fan-blades" id="fan"></div>
     </div>
+
+    <p class="status" id="status">Status: OFF</p>
+
+    <button class="on" onclick="controlFan('on')">Turn ON</button>
+    <button class="off" onclick="controlFan('off')">Turn OFF</button>
 
     <script>
         function controlFan(state) {
@@ -36,10 +33,8 @@
                 statusText.innerText = "Status: OFF";
             }
 
-            // Replace with your actual Render backend URL
-            let apiUrl = "https://your-render-app-url.com/control/fan/" + state;
-
-            fetch(apiUrl, {
+            // Send request to Raspberry Pi via ngrok
+            fetch(NGROK_URL + '/control/fan/' + state, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             })
