@@ -3,26 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Light Control</title>
+    <title>Smart Campus - Light Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Light Control</h1>
-    <button onclick="controlLight('on')">Turn ON</button>
-    <button onclick="controlLight('off')">Turn OFF</button>
-    <p id="status"></p>
+
+    <div class="container">
+        <h1>💡 Light Control</h1>
+
+        <div class="light-container">
+            <div class="bulb" id="bulb"></div>
+        </div>
+
+        <p class="status" id="status">Status: OFF</p>
+
+        <div class="button-group">
+            <button class="on" onclick="toggleLight('on')">Turn ON</button>
+            <button class="off" onclick="toggleLight('off')">Turn OFF</button>
+        </div>
+    </div>
 
     <script>
-        function controlLight(state) {
-            fetch(`/control/light/${state}`, { method: "POST" })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById("status").innerText = data.status || data.error;
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    document.getElementById("status").innerText = "Failed to send request.";
-                });
+        function toggleLight(state) {
+            let bulb = document.getElementById('bulb');
+            let statusText = document.getElementById('status');
+
+            // Update UI immediately
+            if (state === 'on') {
+                bulb.classList.add("on");
+                statusText.innerText = "Status: ON";
+            } else {
+                bulb.classList.remove("on");
+                statusText.innerText = "Status: OFF";
+            }
+
+            // Replace 'https://your-render-app-url.com' with your actual Render backend URL
+            let apiUrl = "https://your-render-app-url.com/control/light/" + state;
+
+            // Send request to Render backend, which forwards it to the Raspberry Pi
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
         }
     </script>
+
 </body>
 </html>
