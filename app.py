@@ -1,9 +1,7 @@
 from flask import Flask, request, jsonify
-from flask_ngrok import run_with_ngrok
 import RPi.GPIO as GPIO
 
 app = Flask(__name__)
-run_with_ngrok(app)
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
