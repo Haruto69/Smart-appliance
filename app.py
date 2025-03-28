@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import RPi.GPIO as GPIO
 
 app = Flask(__name__)
+app.secrect_key='S3cUr3!K3y@2025#RNS'
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
@@ -10,6 +11,8 @@ FAN_PIN = 23
 
 GPIO.setup(LIGHT_PIN, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(FAN_PIN, GPIO.OUT, initial=GPIO.LOW)
+
+USERN
 
 @app.route("/control/<device>/<state>", methods=["POST"])
 def control_device(device, state):
