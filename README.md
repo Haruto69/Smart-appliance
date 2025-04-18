@@ -21,7 +21,7 @@ A Flask-based web application to remotely control lights and fans using Raspberr
 - Flask
 - bcrypt
 - sqlite3
-- RPi.GPIO *(automatically mocked if not found)*
+- RPi.GPIO
 
 Install dependencies:
 
