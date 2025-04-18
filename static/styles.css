@@ -15,13 +15,6 @@ h1, h2 {
     font-weight: 600;
 }
 
-/* Status Display */
-.status {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 20px 0;
-}
-
 /* Buttons */
 button {
     font-size: 18px;
@@ -34,26 +27,54 @@ button {
     font-weight: 500;
 }
 
-.on {
-    background: #4CAF50;
-    color: white;
-    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.5);
+.power-button {
+    font-size: 60px;
+    text-decoration: none;
+    display: inline-block;
+    padding: 30px;
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
 }
 
-.off {
-    background: #E53935;
+/* "On" Button Styles (now red) */
+.btn-on {
+    background: #E53935; /* Red by default */
     color: white;
-    box-shadow: 0 4px 10px rgba(229, 57, 53, 0.5);
+    box-shadow: 0 4px 10px rgba(229, 57, 53, 0.5); /* Red glow */
 }
 
-.on:hover {
-    background: #388E3C;
+.btn-on:hover {
+    background: #D32F2F; /* Darker red on hover */
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.6); /* Darker red glow */
     transform: scale(1.05);
 }
 
-.off:hover {
-    background: #C62828;
+/* "Off" Button Styles (now green) */
+.btn-off {
+    background: #4CAF50; /* Green by default */
+    color: white;
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.5); /* Green glow */
+}
+
+.btn-off:hover {
+    background: #2196F3;  /* Blue on hover */
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.6); /* Blue glow */
     transform: scale(1.05);
+}
+
+/* Light Styles */
+.lightbulb {
+    width: 80px;
+    height: 120px;
+    background-color: gray;
+    border-radius: 50% 50% 40% 40%;
+    position: relative;
+    transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.lightbulb.on {
+    background: radial-gradient(circle, yellow 40%, orange 80%);
+    box-shadow: 0 0 40px yellow;
 }
 
 /* Admin Login Page */
@@ -111,101 +132,3 @@ button {
     background: linear-gradient(to right, #1565C0, #004AAD);
     transform: scale(1.05);
 }
-
-/* Light Styles */
-.lightbulb {
-    width: 80px;
-    height: 120px;
-    background-color: gray;
-    border-radius: 50% 50% 40% 40%;
-    position: relative;
-    transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.lightbulb.on {
-    background: radial-gradient(circle, yellow 40%, orange 80%);
-    box-shadow: 0 0 40px yellow;
-}
-
-/* Fan Styles */
-.fan-container {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    margin: 20px auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Fan Blades */
-.fan-blades {
-    width: 100px;
-    height: 100px;
-    background: url('/static/images/fan.png') no-repeat center center;
-    background-size: contain;
-    transition: transform 0.5s ease-in-out;
-}
-
-/* When Fan is On */
-.fan-blades.on {
-    animation: rotateFan 0.8s linear infinite;
-}
-
-/* Fan Rotation Animation */
-@keyframes rotateFan {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-
-/* Smoke Detector Styles */
-.smoke-container {
-    margin: 20px auto;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.detector {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: gray;
-    transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.detector.on {
-    background: radial-gradient(circle, red 30%, darkred 80%);
-    box-shadow: 0 0 25px red;
-}
-
-/* Welcome Page */
-.welcome-container {
-    margin-top: 50px;
-}
-
-.welcome-options {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.welcome-options a {
-    text-decoration: none;
-    padding: 15px 30px;
-    background: linear-gradient(to right, #1E90FF, #0073E6);
-    color: white;
-    border-radius: 8px;
-    font-size: 18px;
-    transition: all 0.3s ease-in-out;
-    font-weight: 500;
-}
-
-.welcome-options a:hover {
-    background: linear-gradient(to right, #1565C0, #004AAD);
-    transform: scale(1.05);
-}
-
