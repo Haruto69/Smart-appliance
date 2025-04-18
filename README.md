@@ -26,4 +26,4 @@ A Flask-based web application to remotely control lights and fans using Raspberr
 Install dependencies:
 
 ```bash
-pip install flask bcrypt
+pip install -r requirements.txt
