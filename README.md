@@ -10,7 +10,6 @@ A Flask-based web application to remotely control lights and fans using Raspberr
 - 💻 Web interface for turning individual devices ON/OFF
 - 💡 One-click control to switch all lights ON or OFF
 - 📜 Logging of failed login attempts with timestamps
-- 🧪 Mock GPIO support for development on non-Raspberry Pi devices
 - 🔌 Clean modular code for easy customization
 
 ---
