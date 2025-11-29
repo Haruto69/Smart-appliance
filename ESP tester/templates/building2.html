@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Building 2 - Smart LDR Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <header class="main-header">
+        <a href="{{ url_for('index') }}" class="back-btn">← All Buildings</a>
+        <h1>🏗️ Building 2 Control</h1>
+    </header>
+
+    {% if status.error %}
+    <div class="error">
+        {{ status.error }}
+        <br>Make sure ESP32 at {{ device.ip }} is powered on and connected to WiFi.
+    </div>
+    {% endif %}
+
+    <main class="control-panel">
+        <div class="status-block" id="status-container">
+            <p><strong>Mode:</strong> {{ status.mode if status.mode is defined else 'Unknown' }}</p>
+            <p><strong>LED:</strong> {{ 'ON' if status.led_state else 'OFF' if status.led_state is defined else 'Unknown' }}</p>
+            <p><strong>LDR Value:</strong> {{ status.ldr_value if status.ldr_value is defined else 'N/A' }}</p>
+        </div>
+
+        <div class="button-row">
+            <form method="POST" action="/building2/led/on">
+                <button type="submit" class="btn btn-on">LED ON</button>
+            </form>
+            <form method="POST" action="/building2/led/off">
+                <button type="submit" class="btn btn-off">LED OFF</button>
+            </form>
+            <form method="POST" action="/building2/led/toggle">
+                <button type="submit" class="btn btn-toggle">TOGGLE</button>
+            </form>
+        </div>
+
+        <div class="button-row">
+            <form method="POST" action="/building2/mode/auto">
+                <button type="submit" class="btn btn-auto">Auto Mode</button>
+            </form>
+            <form method="POST" action="/building2/mode/manual">
+                <button type="submit" class="btn btn-manual">Manual Mode</button>
+            </form>
+        </div>
+
+        <p class="hint">
+            Auto Mode: LED controlled by LDR sensor (Dark = ON)<br>
+            Manual Mode: Use buttons above to control LED<br>
+            🔄 Status updates every 2 seconds
+        </p>
+    </main>
+
+    <script>
+        function updateStatus() {
+            fetch('/api/building2/status')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('status-container');
+                    if (data.error) {
+                        container.innerHTML = `<p><strong>Error:</strong> ${data.error}</p>`;
+                        return;
+                    }
+                    container.innerHTML = `
+                        <p><strong>Mode:</strong> ${data.mode ?? 'Unknown'}</p>
+                        <p><strong>LED:</strong> ${data.led_state !== undefined ? (data.led_state ? 'ON' : 'OFF') : 'Unknown'}</p>
+                        <p><strong>LDR Value:</strong> ${data.ldr_value ?? 'N/A'}</p>
+                    `;
+                })
+                .catch(() => {
+                    document.getElementById('status-container').innerHTML = '<p><strong>Error:</strong> Connection failed</p>';
+                });
+        }
+        updateStatus();
+        setInterval(updateStatus, 2000);
+    </script>
+</body>
+</html>

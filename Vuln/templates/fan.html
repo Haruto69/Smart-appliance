@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fan Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <h1>Fan Control</h1>
+
+    {% for fan in devices.keys() if "fan" in fan %}
+        <div class="fan-container">
+            <h3>{{ fan.replace("_", " ").capitalize() }}</h3>
+            <button onclick="controlDevice('{{ fan }}', 'on')">Turn ON</button>
+            <button onclick="controlDevice('{{ fan }}', 'off')">Turn OFF</button>
+        </div>
+    {% endfor %}
+
+    <script>
+        function controlDevice(device, state) {
+            fetch('/control/' + device + '/' + state, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+</body>
+</html>

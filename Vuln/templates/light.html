@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <h1>Light Control</h1>
+
+    {% for light in devices.keys() if "light" in light %}
+        <div class="light-container">
+            <h3>{{ light.replace("_", " ").capitalize() }}</h3>
+            <button onclick="controlDevice('{{ light }}', 'on')">Turn ON</button>
+            <button onclick="controlDevice('{{ light }}', 'off')">Turn OFF</button>
+        </div>
+    {% endfor %}
+
+    <script>
+        function controlDevice(device, state) {
+            fetch('/control/' + device + '/' + state, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+</body>
+</html>

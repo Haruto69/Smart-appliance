@@ -1,0 +1,211 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(to right, #141e30, #243b55);
+    color: white;
+}
+
+/* Headings */
+h1, h2 {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* Status Display */
+.status {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+/* Buttons */
+button {
+    font-size: 18px;
+    padding: 12px 25px;
+    margin: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    font-weight: 500;
+}
+
+.on {
+    background: #4CAF50;
+    color: white;
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.5);
+}
+
+.off {
+    background: #E53935;
+    color: white;
+    box-shadow: 0 4px 10px rgba(229, 57, 53, 0.5);
+}
+
+.on:hover {
+    background: #388E3C;
+    transform: scale(1.05);
+}
+
+.off:hover {
+    background: #C62828;
+    transform: scale(1.05);
+}
+
+/* Admin Login Page */
+.login-container {
+    width: 350px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    margin: 100px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.login-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.login-container label {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 10px;
+    text-align: left;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.login-container input:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+}
+
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    background: linear-gradient(to right, #1E90FF, #0073E6);
+    color: white;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.login-container button:hover {
+    background: linear-gradient(to right, #1565C0, #004AAD);
+    transform: scale(1.05);
+}
+
+/* Light Styles */
+.lightbulb {
+    width: 80px;
+    height: 120px;
+    background-color: gray;
+    border-radius: 50% 50% 40% 40%;
+    position: relative;
+    transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.lightbulb.on {
+    background: radial-gradient(circle, yellow 40%, orange 80%);
+    box-shadow: 0 0 40px yellow;
+}
+
+/* Fan Styles */
+.fan-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Fan Blades */
+.fan-blades {
+    width: 100px;
+    height: 100px;
+    background: url('/static/images/fan.png') no-repeat center center;
+    background-size: contain;
+    transition: transform 0.5s ease-in-out;
+}
+
+/* When Fan is On */
+.fan-blades.on {
+    animation: rotateFan 0.8s linear infinite;
+}
+
+/* Fan Rotation Animation */
+@keyframes rotateFan {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
+/* Smoke Detector Styles */
+.smoke-container {
+    margin: 20px auto;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detector {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: gray;
+    transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.detector.on {
+    background: radial-gradient(circle, red 30%, darkred 80%);
+    box-shadow: 0 0 25px red;
+}
+
+/* Welcome Page */
+.welcome-container {
+    margin-top: 50px;
+}
+
+.welcome-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.welcome-options a {
+    text-decoration: none;
+    padding: 15px 30px;
+    background: linear-gradient(to right, #1E90FF, #0073E6);
+    color: white;
+    border-radius: 8px;
+    font-size: 18px;
+    transition: all 0.3s ease-in-out;
+    font-weight: 500;
+}
+
+.welcome-options a:hover {
+    background: linear-gradient(to right, #1565C0, #004AAD);
+    transform: scale(1.05);
+}
+

@@ -1,7 +1,0 @@
-flask
-Gunicorn
-requests
-bcrypt
-sqlite3
-datetime
-unittest

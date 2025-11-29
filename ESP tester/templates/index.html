@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Building Selector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="selector-container">
+        <header class="main-header">
+            <h1>🏢 Smart Building Control</h1>
+            <p>Select a building to monitor and control its ESP32</p>
+        </header>
+
+        <main class="grid-container">
+            {% for key, device in devices.items() %}
+            <a href="{{ url_for(key) }}" class="building-card">
+                <div class="building-icon">{{ device.name[0] }}</div>
+                <h3>{{ device.name }}</h3>
+                <p>IP: {{ device.ip }}</p>
+                <span class="status-badge">Control Panel</span>
+            </a>
+            {% endfor %}
+        </main>
+    </div>
+</body>
+</html>

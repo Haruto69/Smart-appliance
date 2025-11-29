@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Campus SIEM Dashboard</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // Icon Components
+        const Shield = ({className}) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+        );
+
+        const AlertTriangle = ({className}) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+        );
+
+        const Activity = ({className}) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+        );
+
+        const Clock = ({className}) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        );
+
+        const Lock = ({className}) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+        );
+
+        const Database = ({className}) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+            </svg>
+        );
+
+        const Zap = ({className}) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+        );
+
+        const UnifiedSIEMDashboard = () => {
+          const [activeTab, setActiveTab] = React.useState('overview');
+          const [isMonitoring, setIsMonitoring] = React.useState(false);
+          const [dashboardData, setDashboardData] = React.useState({
+            ssh: { logs: [], stats: {} },
+            sql: { logs: [], stats: {} },
+            dos: { logs: [], stats: {} },
+            overall: { total_threats: 0, critical_alerts: 0, active_incidents: 0, system_health: 100 }
+          });
+          const [error, setError] = React.useState(null);
+
+          React.useEffect(() => {
+            if (!isMonitoring) return;
+
+            const fetchData = async () => {
+              try {
+                const response = await fetch('http://192.168.31.106:5003/api/unified/dashboard');
+                const result = await response.json();
+                
+                if (result.success) {
+                  setDashboardData(result.data);
+                  setError(null);
+                }
+              } catch (err) {
+                console.error('Error fetching unified data:', err);
+                setError('Failed to connect to unified backend on port 5003');
+              }
+            };
+
+            fetchData();
+            const interval = setInterval(fetchData, 3000);
+            
+            return () => clearInterval(interval);
+          }, [isMonitoring]);
+
+          const getThreatLevel = () => {
+            const threats = dashboardData.overall.total_threats;
+            if (threats > 50) return { level: 'Critical', color: 'bg-red-500' };
+            if (threats > 20) return { level: 'High', color: 'bg-orange-500' };
+            if (threats > 5) return { level: 'Medium', color: 'bg-yellow-500' };
+            return { level: 'Low', color: 'bg-green-500' };
+          };
+
+          const threat = getThreatLevel();
+
+          return (
+            <div className="min-h-screen bg-gray-900 text-white p-6">
+              <div className="max-w-7xl mx-auto">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-3">
+                    <Shield className="w-12 h-12 text-blue-400" />
+                    <div>
+                      <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                        Smart Campus SIEM
+                      </h1>
+                      <p className="text-gray-400">Security Information & Event Management</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <div className="text-sm text-gray-400">System Health</div>
+                      <div className="text-2xl font-bold">{dashboardData.overall.system_health.toFixed(1)}%</div>
+                    </div>
+                    <button
+                      onClick={() => setIsMonitoring(!isMonitoring)}
+                      className={`px-6 py-3 rounded-lg font-semibold transition ${
+                        isMonitoring 
+                          ? 'bg-red-600 hover:bg-red-700' 
+                          : 'bg-green-600 hover:bg-green-700'
+                      }`}
+                    >
+                      {isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Error Message */}
+                {error && (
+                  <div className="bg-red-900 border border-red-500 rounded-lg p-4 mb-6">
+                    <p className="text-red-200">{error}</p>
+                  </div>
+                )}
+
+                {/* Threat Level Banner */}
+                {dashboardData.overall.total_threats > 0 && (
+                  <div className={`${threat.color} bg-opacity-20 border ${threat.color.replace('bg-', 'border-')} border-opacity-50 rounded-lg p-4 mb-6 flex items-center justify-between`}>
+                    <div className="flex items-center gap-3">
+                      <AlertTriangle className="w-6 h-6" />
+                      <span className="font-bold text-lg">Threat Level: {threat.level}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Activity className={isMonitoring ? 'animate-pulse' : ''} />
+                      <span>{isMonitoring ? 'Active Monitoring' : 'Monitoring Inactive'}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Stats Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-gradient-to-br from-red-900 to-red-800 rounded-lg p-6 shadow-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-red-200">Total Threats</span>
+                      <AlertTriangle className="w-6 h-6 text-red-300" />
+                    </div>
+                    <p className="text-4xl font-bold">{dashboardData.overall.total_threats}</p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-orange-900 to-orange-800 rounded-lg p-6 shadow-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-orange-200">Critical Alerts</span>
+                      <Zap className="w-6 h-6 text-orange-300" />
+                    </div>
+                    <p className="text-4xl font-bold">{dashboardData.overall.critical_alerts}</p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-lg p-6 shadow-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-purple-200">Active Incidents</span>
+                      <Activity className="w-6 h-6 text-purple-300" />
+                    </div>
+                    <p className="text-4xl font-bold">{dashboardData.overall.active_incidents}</p>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 shadow-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-blue-200">Attack Vectors</span>
+                      <Shield className="w-6 h-6 text-blue-300" />
+                    </div>
+                    <p className="text-4xl font-bold">3</p>
+                  </div>
+                </div>
+
+                {/* Tab Navigation */}
+                <div className="flex gap-2 mb-6 bg-gray-800 p-1 rounded-lg overflow-x-auto">
+                  <button
+                    onClick={() => setActiveTab('overview')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold transition whitespace-nowrap ${
+                      activeTab === 'overview' ? 'bg-blue-600' : 'hover:bg-gray-700'
+                    }`}
+                  >
+                    Overview
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('ssh')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-center gap-2 whitespace-nowrap ${
+                      activeTab === 'ssh' ? 'bg-blue-600' : 'hover:bg-gray-700'
+                    }`}
+                  >
+                    <Lock className="w-4 h-4" />
+                    SSH ({dashboardData.ssh.logs.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('sql')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-center gap-2 whitespace-nowrap ${
+                      activeTab === 'sql' ? 'bg-blue-600' : 'hover:bg-gray-700'
+                    }`}
+                  >
+                    <Database className="w-4 h-4" />
+                    SQL ({dashboardData.sql.logs.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('dos')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold transition flex items-center justify-center gap-2 whitespace-nowrap ${
+                      activeTab === 'dos' ? 'bg-blue-600' : 'hover:bg-gray-700'
+                    }`}
+                  >
+                    <Zap className="w-4 h-4" />
+                    DoS ({dashboardData.dos.logs.length})
+                  </button>
+                </div>
+
+                {/* Content Area */}
+                <div className="bg-gray-800 rounded-lg border border-gray-700">
+                  {activeTab === 'overview' && (
+                    <div className="p-6">
+                      <h2 className="text-2xl font-bold mb-4">Attack Distribution</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="bg-gray-900 p-4 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-gray-400">SSH Brute Force</span>
+                            <Lock className="w-5 h-5 text-red-400" />
+                          </div>
+                          <div className="text-3xl font-bold">{dashboardData.ssh.logs.length}</div>
+                          <div className="text-sm text-gray-500 mt-1">Failed login attempts</div>
+                        </div>
+                        <div className="bg-gray-900 p-4 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-gray-400">SQL Injection</span>
+                            <Database className="w-5 h-5 text-yellow-400" />
+                          </div>
+                          <div className="text-3xl font-bold">{dashboardData.sql.logs.length}</div>
+                          <div className="text-sm text-gray-500 mt-1">Malicious queries blocked</div>
+                        </div>
+                        <div className="bg-gray-900 p-4 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-gray-400">DoS Attacks</span>
+                            <Zap className="w-5 h-5 text-orange-400" />
+                          </div>
+                          <div className="text-3xl font-bold">{dashboardData.dos.logs.length}</div>
+                          <div className="text-sm text-gray-500 mt-1">Rate limit violations</div>
+                        </div>
+                      </div>
+
+                      <div className="mt-6">
+                        <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
+                          <Clock className="w-5 h-5" />
+                          Recent Activity Timeline
+                        </h3>
+                        <div className="space-y-2 max-h-96 overflow-y-auto">
+                          {[...dashboardData.ssh.logs.slice(0, 3), 
+                            ...dashboardData.sql.logs.slice(0, 2), 
+                            ...dashboardData.dos.logs.slice(0, 2)]
+                            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                            .slice(0, 10)
+                            .map((log, idx) => (
+                              <div key={idx} className="bg-gray-900 p-3 rounded flex items-center gap-3">
+                                <Clock className="w-4 h-4 text-gray-400" />
+                                <span className="text-sm text-gray-400">
+                                  {new Date(log.timestamp).toLocaleString()}
+                                </span>
+                                <span className="text-sm">
+                                  {log.ip ? `SSH attempt from ${log.ip}` :
+                                   log.query ? `SQL injection: ${log.query.substring(0, 30)}...` :
+                                   log.sourceIP ? `DoS from ${log.sourceIP}` :
+                                   'Unknown attack'}
+                                </span>
+                              </div>
+                            ))}
+                          {dashboardData.overall.total_threats === 0 && (
+                            <div className="text-center text-gray-400 py-8">
+                              {isMonitoring ? 'No attacks detected yet' : 'Start monitoring to see attacks'}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'ssh' && (
+                    <div>
+                      <div className="p-4 border-b border-gray-700">
+                        <h2 className="text-xl font-bold flex items-center gap-2">
+                          <Lock className="w-5 h-5" />
+                          SSH Brute Force Attacks
+                        </h2>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead className="bg-gray-900">
+                            <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Timestamp</th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Source IP</th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Username</th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-700">
+                            {dashboardData.ssh.logs.length === 0 ? (
+                              <tr>
+                                <td colSpan="4" className="px-6 py-8 text-center text-gray-400">
+                                  {isMonitoring ? 'No SSH attacks detected' : 'Start monitoring to see attacks'}
+                                </td>
+                              </tr>
+                            ) : (
+                              dashboardData.ssh.logs.slice(0, 50).map((attack, idx) => (
+                                <tr key={idx} className="hover:bg-gray-750">
+                                  <td className="px-6 py-4 text-sm">{new Date(attack.timestamp).toLocaleString()}</td>
+                                  <td className="px-6 py-4 text-sm font-mono">{attack.ip}</td>
+                                  <td className="px-6 py-4 text-sm">{attack.username}</td>
+                                  <td className="px-6 py-4">
+                                    <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-900 text-red-200">
+                                      FAILED
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'sql' && (
+                    <div>
+                      <div className="p-4 border-b border-gray-700">
+                        <h2 className="text-xl font-bold flex items-center gap-2">
+                          <Database className="w-5 h-5" />
+                          SQL Injection Attempts
+                        </h2>
+                      </div>
+                      <div className="p-6">
+                        {dashboardData.sql.logs.length === 0 ? (
+                          <p className="text-center text-gray-400 py-8">
+                            {isMonitoring ? 'No SQL injection attempts detected' : 'Start monitoring to see attacks'}
+                          </p>
+                        ) : (
+                          <div className="space-y-3">
+                            {dashboardData.sql.logs.slice(0, 50).map((attack, idx) => (
+                              <div key={idx} className="bg-gray-900 p-4 rounded-lg">
+                                <div className="flex justify-between items-start mb-2">
+                                  <span className="text-sm text-gray-400">{new Date(attack.timestamp).toLocaleString()}</span>
+                                  <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                    attack.blocked ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'
+                                  }`}>
+                                    {attack.blocked ? 'BLOCKED' : 'DETECTED'}
+                                  </span>
+                                </div>
+                                <div className="font-mono text-sm bg-black p-2 rounded mb-2">{attack.query}</div>
+                                <div className="text-sm text-gray-400">Endpoint: {attack.endpoint} | IP: {attack.ip}</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'dos' && (
+                    <div className="h-full">
+                      <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+                        <h2 className="text-xl font-bold flex items-center gap-2">
+                          <Zap className="w-5 h-5" />
+                          DoS Attack Dashboard
+                        </h2>
+                        <span className="text-sm text-gray-400">Embedded from Port 5005</span>
+                      </div>
+                      <div className="w-full" style={{height: 'calc(100vh - 400px)', minHeight: '600px'}}>
+                        <iframe 
+                          src="http://192.168.31.106:5005" 
+                          className="w-full h-full border-0"
+                          title="DoS Dashboard"
+                          style={{background: 'white'}}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<UnifiedSIEMDashboard />);
+    </script>
+</body>
+</html>

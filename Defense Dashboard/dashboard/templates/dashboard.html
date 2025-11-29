@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DoS Attack Monitoring Dashboard</title>
+    <meta charset="UTF-8" />
+</head>
+<body>
+    <h1>DoS Attack Monitoring Dashboard</h1>
+
+    <div id="alert" style="padding:10px; border:2px solid red; display:none; background-color: #ffdada;">
+        <strong>ALERT: Possible DoS Attack!</strong> <span id="reason"></span>
+    </div>
+
+    <p>Current CPU Usage: <span id="cpu_now"></span>%</p>
+    <p>Port 5001 Traffic: <span id="net_5001_now"></span> bytes/s</p>
+    <p>Port 6083 Traffic: <span id="net_6083_now"></span> bytes/s</p>
+
+    <canvas id="cpuChart" width="400" height="120"></canvas>
+    <canvas id="netChart5001" width="400" height="120"></canvas>
+    <canvas id="netChart6083" width="400" height="120"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let cpuChart, netChart5001, netChart6083;
+
+        async function updateDashboard() {
+            const r = await fetch('/metrics');
+            const data = await r.json();
+
+            document.getElementById('cpu_now').textContent = data.current_cpu;
+            document.getElementById('net_5001_now').textContent = data.current_5001;
+            document.getElementById('net_6083_now').textContent = data.current_6083;
+
+            // Show alert if DoS detected
+            document.getElementById('alert').style.display = data.dos_detected ? "" : "none";
+            document.getElementById('reason').textContent = data.dos_reason;
+
+            // Update CPU chart
+            if (!cpuChart) {
+                cpuChart = new Chart(document.getElementById('cpuChart'), {
+                    type: 'line',
+                    data: {
+                        labels: Array(data.cpu.length).fill(''),
+                        datasets: [{label: 'CPU %', data: data.cpu, backgroundColor: 'rgba(255,0,0,0.1)', borderColor: 'red', fill: true}]
+                    },
+                    options: {scales: {y: {min: 0, max: 100}}}
+                });
+            } else {
+                cpuChart.data.datasets[0].data = data.cpu;
+                cpuChart.update();
+            }
+
+            // Port 5001
+            if (!netChart5001) {
+                netChart5001 = new Chart(document.getElementById('netChart5001'), {
+                    type: 'line',
+                    data: {
+                        labels: Array(data.net_5001.length).fill(''),
+                        datasets: [{label: 'Port 5001 bytes', data: data.net_5001, backgroundColor: 'rgba(0,100,200,0.1)', borderColor: 'blue', fill: true}]
+                    },
+                    options: {scales: {y: {min: 0}}}
+                });
+            } else {
+                netChart5001.data.datasets[0].data = data.net_5001;
+                netChart5001.update();
+            }
+
+            // Port 6083
+            if (!netChart6083) {
+                netChart6083 = new Chart(document.getElementById('netChart6083'), {
+                    type: 'line',
+                    data: {
+                        labels: Array(data.net_6083.length).fill(''),
+                        datasets: [{label: 'Port 6083 bytes', data: data.net_6083, backgroundColor: 'rgba(100,0,200,0.1)', borderColor: 'purple', fill: true}]
+                    },
+                    options: {scales: {y: {min: 0}}}
+                });
+            } else {
+                netChart6083.data.datasets[0].data = data.net_6083;
+                netChart6083.update();
+            }
+        }
+        setInterval(updateDashboard, 1000);
+        updateDashboard();
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+2025-11-12 19:07:21 Failed login - Username: 'meow', 'cat'); --' from 127.0.0.1
+2025-11-12 19:07:27 Failed login - Username: 'meow' from 127.0.0.1
+2025-11-12 19:08:05 Failed login - Username: 'meow', 'cat') --' from 127.0.0.1
+2025-11-12 19:08:14 Failed login - Username: 'meow' from 127.0.0.1
+2025-11-12 19:10:40 Failed login - Username: 'x', 'y'); INSERT INTO users VALUES (99,'hacker','hacked'); --' from 127.0.0.1
+2025-11-12 19:10:48 Failed login - Username: 'x', 'y'); INSERT INTO users VALUES (99,'hacker','hacked'); --' from 127.0.0.1
+2025-11-12 19:11:08 Failed login - Username: ''; --' from 127.0.0.1
+2025-11-12 19:12:06 Failed login - Username: 'hacker', 'hacked123');--' from 127.0.0.1
+2025-11-12 19:12:26 Failed login - Username: 'hacker' from 127.0.0.1
+2025-11-14 10:44:21 Failed login - Username: '' OR '1'='1' from 15.10.20.103
+2025-11-14 10:45:13 Failed login - Username: '' OR '1' = '1' from 15.10.20.103
+2025-11-14 10:48:41 Failed login - Username: '<script>alert('xss');</script>' from 15.10.20.105
+2025-11-14 10:49:24 Failed login - Username: '<script>' from 15.10.20.105
+2025-11-14 10:51:17 Failed login - Username: '<img src=x onerror=alert('xss')>' from 15.10.20.105
+2025-11-14 13:29:03 Failed login - Username: '' OR '1' = '1' from 15.10.20.102

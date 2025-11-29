@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Campus - Smoke Detector Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <h1>Smart Campus - Smoke Detector Control</h1>
+
+    <div class="smoke-container">
+        <div class="detector" id="detector"></div>
+    </div>
+
+    <p class="status" id="status">Status: OFF</p>
+
+    <button class="on" onclick="toggleDetector('on')">Activate</button>
+    <button class="off" onclick="toggleDetector('off')">Deactivate</button>
+
+    <script>
+        function toggleDetector(state) {
+            let detector = document.getElementById('detector');
+            let statusText = document.getElementById('status');
+
+            if (state === 'on') {
+                detector.style.backgroundColor = 'red';
+                detector.style.boxShadow = '0 0 20px red';
+                statusText.innerText = "Status: ON (Detecting)";
+            } else {
+                detector.style.backgroundColor = 'gray';
+                detector.style.boxShadow = 'none';
+                statusText.innerText = "Status: OFF";
+            }
+
+            // Send request to Flask backend
+            fetch('/control/smoke_detector/' + state, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+</body>
+</html>
