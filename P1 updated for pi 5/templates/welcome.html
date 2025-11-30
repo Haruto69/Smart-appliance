@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Campus Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; border-bottom: 3px solid #007bff; padding-bottom: 10px; }
+        h2 { color: #007bff; margin-top: 30px; }
+        h3 { color: #666; margin-top: 20px; }
+        ul { list-style: none; padding: 0; }
+        li { 
+            margin: 10px 0;
+            padding: 12px;
+            background: #f9f9f9;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+        }
+        li:hover { background: #e9ecef; }
+        a { 
+            text-decoration: none; 
+            color: #007bff;
+            font-weight: bold;
+        }
+        a:hover { text-decoration: underline; }
+        .warning-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .warning-section h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+        .warning-section li {
+            background: transparent;
+            border-left: none;
+            color: #856404;
+        }
+        .logout {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #dc3545;
+            color: white !important;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .logout:hover {
+            background: #c82333;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 Smart Campus Dashboard</h1>
+        <h2>Welcome, <span style="color: #28a745;">{{ username }}</span>!</h2>
+        
+        <h3>🎛️ Device Controls</h3>
+        <ul>
+            <li><a href="/control/light_1">💡 Control Light 1</a></li>
+            <li><a href="/control/light_2">💡 Control Light 2</a></li>
+            <li><a href="/control/light_3">💡 Control Light 3</a></li>
+            <li><a href="/control/light_4">💡 Control Light 4</a></li>
+            <li><a href="/control/fan_1">🌀 Control Fan 1</a></li>
+            <li><a href="/control/fan_2">🌀 Control Fan 2</a></li>
+        </ul>
+        
+        <div class="warning-section">
+            <h3>⚠️ Vulnerable Endpoints (SQL Injection Lab)</h3>
+            <ul>
+                <li><a href="/add_user">➕ Add New User</a> - No authentication, SQL injection possible</li>
+                <li><a href="/view_users">👥 View All Users</a> - Displays plain text passwords</li>
+            </ul>
+            <p style="color: #856404; margin: 10px 0 0 0;">
+                <strong>Note:</strong> These endpoints are intentionally vulnerable for educational purposes.
+            </p>
+        </div>
+        
+        <a href="/logout" class="logout">🚪 Logout</a>
+    </div>
+</body>
+</html>
