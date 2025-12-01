@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ATTACK CONTROL{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: #000000;
+            color: #00ff41;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 79px, #0a0a0a 79px, #0a0a0a 81px, transparent 81px),
+                linear-gradient(transparent 79px, #0a0a0a 79px, #0a0a0a 81px, transparent 81px);
+            background-size: 80px 80px;
+            animation: grid-flow 20s linear infinite;
+            z-index: 0;
+            opacity: 0.3;
+        }
+        
+        @keyframes grid-flow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(80px); }
+        }
+        
+        /* Glitch Effect */
+        .glitch {
+            font-family: 'Orbitron', sans-serif;
+            position: relative;
+            animation: glitch-skew 2s infinite;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #9e0000;
+            animation: glitch-anim 0.3s infinite;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: 2px 0 #00ffff;
+            animation: glitch-anim 0.3s reverse infinite;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip-path: inset(40% 0 61% 0); }
+            20% { clip-path: inset(92% 0 1% 0); }
+            40% { clip-path: inset(43% 0 1% 0); }
+            60% { clip-path: inset(25% 0 58% 0); }
+            80% { clip-path: inset(54% 0 7% 0); }
+            100% { clip-path: inset(58% 0 43% 0); }
+        }
+        
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            10% { transform: skew(-2deg); }
+            20% { transform: skew(0deg); }
+        }
+        
+        /* Neon Borders */
+        .neon-box {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ff41;
+            box-shadow: 
+                0 0 10px #00ff41,
+                inset 0 0 10px rgba(0, 255, 65, 0.2);
+            position: relative;
+        }
+        
+        .neon-box-red {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #ff0040;
+            box-shadow: 
+                0 0 15px #ff0040,
+                inset 0 0 15px rgba(255, 0, 64, 0.2);
+        }
+        
+        .neon-box-cyan {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00ffff;
+            box-shadow: 
+                0 0 15px #00ffff,
+                inset 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+        
+        /* Scan Line Effect */
+        .scan-line {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .scan-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(transparent, #00ff41, transparent);
+            animation: scan 3s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        /* Attack Button */
+        .attack-btn {
+            background: linear-gradient(135deg, #a10000 0%, #9e0202 50%, #ff0000 100%);
+            border: 2px solid #750000;
+            box-shadow: 
+                0 0 20px #ff0080,
+                inset 0 0 20px rgba(255, 0, 128, 0.3);
+            text-shadow: 0 0 10px #fff;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+        
+        .attack-btn:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 
+                0 0 30px #ff0080,
+                0 0 60px #ff0040,
+                inset 0 0 30px rgba(255, 0, 0, 0.5);
+        }
+        
+        .attack-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: rgba(0, 0, 0, 0.95);
+            border-right: 2px solid #00ff41;
+            box-shadow: 2px 0 20px rgba(0, 255, 65, 0.3);
+        }
+        
+        .nav-item {
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .nav-item:hover {
+            background: rgba(0, 255, 65, 0.1);
+            border-left-color: #00ff41;
+            box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.2);
+        }
+        
+        /* Terminal Effect */
+        .terminal {
+            background: #000;
+            border: 2px solid #00ff41;
+            box-shadow: 
+                0 0 10px #00ff41,
+                inset 0 0 40px rgba(0, 255, 65, 0.1);
+            font-family: 'Courier New', monospace;
+            color: #00ff41;
+            text-shadow: 0 0 5px #00ff41;
+        }
+        
+        .terminal::before {
+            content: '> ';
+            color: #ff0040;
+        }
+        
+        /* Status Indicators */
+        .status-active {
+            color: #ff0040;
+            animation: pulse-red 1.5s infinite;
+        }
+        
+        .status-success {
+            color: #00ff41;
+            animation: pulse-green 1.5s infinite;
+        }
+        
+        .status-warning {
+            color: #ffff00;
+            animation: pulse-yellow 1.5s infinite;
+        }
+        
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px #ff0040; }
+            50% { opacity: 0.5; text-shadow: 0 0 20px #ff0040; }
+        }
+        
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px #00ff41; }
+            50% { opacity: 0.5; text-shadow: 0 0 20px #00ff41; }
+        }
+        
+        @keyframes pulse-yellow {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px #ffff00; }
+            50% { opacity: 0.5; text-shadow: 0 0 20px #ffff00; }
+        }
+        
+        /* Card Hover */
+        .card-attack {
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .card-attack:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 0 30px currentColor,
+                inset 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Input Fields */
+        input, select, textarea {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff41;
+            color: #00ff41;
+            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.2);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 
+                0 0 15px #00ffff,
+                inset 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #00ff41;
+            box-shadow: 0 0 10px #00ff41;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animated"></div>
+    
+    {% if session.get('user_id') %}
+    <div class="flex min-h-screen relative z-10">
+        <!-- Sidebar -->
+        <aside class="sidebar w-72 fixed h-full overflow-y-auto">
+            <div class="p-6">
+                <h1 class="glitch text-3xl font-black mb-8 text-center" data-text="⚠ ATTACK CONTROL ⚠">
+                    ⚠ ATTACK CONTROL ⚠
+                </h1>
+                
+                <div class="neon-box p-4 mb-6 scan-line">
+                    <div class="text-center">
+                        <div class="text-5xl mb-2">☠</div>
+                        <div class="text-sm">SYSTEM ARMED</div>
+                    </div>
+                </div>
+                
+                <nav class="space-y-1">
+                    <a href="/dashboard" class="nav-item flex items-center p-4 text-white hover:text-[#00ff41]">
+                        <i class="fas fa-crosshairs mr-3 text-xl"></i>
+                        <span>DASHBOARD</span>
+                    </a>
+                    <a href="/scan" class="nav-item flex items-center p-4 text-white hover:text-[#00ff41]">
+                        <i class="fas fa-broadcast-tower mr-3 text-xl"></i>
+                        <span>RECON SCAN</span>
+                    </a>
+                    <a href="/brute-force" class="nav-item flex items-center p-4 text-white hover:text-[#00ff41]">
+                        <i class="fas fa-skull-crossbones mr-3 text-xl"></i>
+                        <span>BRUTE FORCE</span>
+                    </a>
+                    <a href="/dos" class="nav-item flex items-center p-4 text-white hover:text-[#00ff41]">
+                        <i class="fas fa-bomb mr-3 text-xl"></i>
+                        <span>DOS STRIKE</span>
+                    </a>
+                    <a href="/sql-injection" class="nav-item flex items-center p-4 text-white hover:text-[#00ff41]">
+                        <i class="fas fa-syringe mr-3 text-xl"></i>
+                        <span>SQL INJECT</span>
+                    </a>
+                </nav>
+                
+                <div class="neon-box-red p-4 mt-6">
+                    <div class="text-[#ff0040] font-bold mb-3 text-lg">⚡ LIVE STATUS</div>
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="text-gray-400">ACTIVE:</span>
+                        <span class="status-active font-mono text-xl" id="active-count">0</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">TOTAL:</span>
+                        <span class="text-[#00ffff] font-mono text-xl" id="total-count">0</span>
+                    </div>
+                </div>
+                
+                <a href="/logout" class="block mt-6 p-4 neon-box-red text-center font-bold text-[#ff0040] hover:bg-[#ff0040] hover:text-black transition">
+                    <i class="fas fa-power-off mr-2"></i>DISCONNECT
+                </a>
+            </div>
+        </aside>
+        
+        <main class="ml-72 flex-1 p-8">
+    {% else %}
+    <main class="w-full">
+    {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    
+    <script>
+        function updateStatus() {
+            fetch('/api/attacks')
+                .then(res => res.json())
+                .then(data => {
+                    const running = data.filter(a => a.status === 'running').length;
+                    const totalEl = document.getElementById('total-count');
+                    const activeEl = document.getElementById('active-count');
+                    
+                    if (totalEl) totalEl.textContent = data.length;
+                    if (activeEl) activeEl.textContent = running;
+                })
+                .catch(err => {});
+        }
+        
+        if (document.getElementById('active-count')) {
+            updateStatus();
+            setInterval(updateStatus, 3000);
+        }
+    </script>
+    
+    {% block scripts %}{% endblock %}
+    
+    {% if session.get('user_id') %}
+    </div>
+    {% endif %}
+</body>
+</html>

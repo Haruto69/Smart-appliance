@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-6xl w-full">
+        <!-- Header -->
+        <div class="text-center mb-12 animate-fadeIn">
+            <i class="fas fa-shield-virus text-8xl text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-purple-400 mb-6"></i>
+            <h1 class="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400 mb-4">
+                Smart Campus Attack Dashboard
+            </h1>
+            <p class="text-xl text-gray-400">Advanced Security Testing Platform for IoT Infrastructure</p>
+        </div>
+        
+        <!-- Feature Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <div class="glass-effect card-hover rounded-2xl p-8 border-l-4 border-green-400">
+                <i class="fas fa-radar text-5xl text-green-400 mb-4"></i>
+                <h3 class="text-2xl font-bold mb-3 text-green-400">Network Reconnaissance</h3>
+                <p class="text-gray-400 mb-4">Aggressive port scanning and service enumeration with Nmap. Discover vulnerabilities and open attack vectors.</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• Full port range scanning (1-65535)</li>
+                    <li>• Service version detection</li>
+                    <li>• OS fingerprinting</li>
+                    <li>• Vulnerability scanning</li>
+                </ul>
+            </div>
+            
+            <div class="glass-effect card-hover rounded-2xl p-8 border-l-4 border-pink-400">
+                <i class="fas fa-key text-5xl text-pink-400 mb-4"></i>
+                <h3 class="text-2xl font-bold mb-3 text-pink-400">Brute Force Attacks</h3>
+                <p class="text-gray-400 mb-4">Automated credential testing using Crunch and Hydra. Test authentication mechanisms across multiple protocols.</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• Wordlist generation with Crunch</li>
+                    <li>• Multi-threaded attacks with Hydra</li>
+                    <li>• SSH, FTP, HTTP, MySQL, RDP support</li>
+                    <li>• Multi-user testing mode</li>
+                </ul>
+            </div>
+            
+            <div class="glass-effect card-hover rounded-2xl p-8 border-l-4 border-red-400">
+                <i class="fas fa-bomb text-5xl text-red-400 mb-4"></i>
+                <h3 class="text-2xl font-bold mb-3 text-red-400">DoS Operations</h3>
+                <p class="text-gray-400 mb-4">Multi-vector denial of service attacks. Test system resilience and availability under aggressive load.</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• SYN/UDP/ICMP flooding</li>
+                    <li>• HTTP application layer attacks</li>
+                    <li>• Slowloris connection exhaustion</li>
+                    <li>• Multi-vector simultaneous attacks</li>
+                </ul>
+            </div>
+            
+            <div class="glass-effect card-hover rounded-2xl p-8 border-l-4 border-purple-400">
+                <i class="fas fa-database text-5xl text-purple-400 mb-4"></i>
+                <h3 class="text-2xl font-bold mb-3 text-purple-400">SQL Injection</h3>
+                <p class="text-gray-400 mb-4">Automated database exploitation with pre-built payloads. Test web application security and data integrity.</p>
+                <ul class="text-sm text-gray-500 space-y-1">
+                    <li>• Authentication bypass techniques</li>
+                    <li>• UNION-based data extraction</li>
+                    <li>• Time-based blind injection</li>
+                    <li>• Custom payload support</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- System Info -->
+        <div class="glass-effect rounded-2xl p-8 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-cyan-400">
+                <i class="fas fa-server"></i> Smart Campus Architecture
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div class="bg-gray-800/50 rounded-lg p-4 text-center">
+                    <i class="fas fa-raspberry-pi text-3xl text-red-400 mb-2"></i>
+                    <p class="font-semibold text-sm">Raspberry Pi</p>
+                    <p class="text-xs text-gray-400">Main Controller</p>
+                </div>
+                <div class="bg-gray-800/50 rounded-lg p-4 text-center">
+                    <i class="fas fa-microchip text-3xl text-blue-400 mb-2"></i>
+                    <p class="font-semibold text-sm">ESP32 #1</p>
+                    <p class="text-xs text-gray-400">Temp Sensor</p>
+                </div>
+                <div class="bg-gray-800/50 rounded-lg p-4 text-center">
+                    <i class="fas fa-microchip text-3xl text-blue-400 mb-2"></i>
+                    <p class="font-semibold text-sm">ESP32 #2</p>
+                    <p class="text-xs text-gray-400">Humidity Sensor</p>
+                </div>
+                <div class="bg-gray-800/50 rounded-lg p-4 text-center">
+                    <i class="fas fa-microchip text-3xl text-blue-400 mb-2"></i>
+                    <p class="font-semibold text-sm">ESP32 #3</p>
+                    <p class="text-xs text-gray-400">Motion Sensor</p>
+                </div>
+                <div class="bg-gray-800/50 rounded-lg p-4 text-center">
+                    <i class="fas fa-microchip text-3xl text-blue-400 mb-2"></i>
+                    <p class="font-semibold text-sm">ESP32 #4</p>
+                    <p class="text-xs text-gray-400">Light Sensor</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Warning -->
+        <div class="glass-effect rounded-2xl p-6 border-2 border-red-500 mb-8">
+            <div class="flex items-start">
+                <i class="fas fa-exclamation-triangle text-3xl text-red-400 mr-4 mt-1"></i>
+                <div>
+                    <h3 class="text-xl font-bold text-red-400 mb-2">Security Notice</h3>
+                    <p class="text-gray-300 mb-2">
+                        This platform is designed for <strong>authorized security testing only</strong>. 
+                        All attacks are aggressive and can cause system disruption.
+                    </p>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>✓ Only test systems you own or have explicit permission to test</li>
+                        <li>✓ Use in isolated network environments</li>
+                        <li>✓ Document all testing activities</li>
+                        <li>✗ Never attack unauthorized systems</li>
+                        <li>✗ Unauthorized access is illegal</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTA Button -->
+        <div class="text-center">
+            <a href="/dashboard" class="inline-block attack-button px-12 py-4 rounded-xl text-xl font-bold text-white">
+                <i class="fas fa-rocket mr-3"></i>Launch Attack Dashboard
+            </a>
+            <p class="text-gray-500 text-sm mt-4">
+                Default credentials: admin / admin123
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-fadeIn {
+        animation: fadeIn 1s ease-out;
+    }
+</style>
+{% endblock %}

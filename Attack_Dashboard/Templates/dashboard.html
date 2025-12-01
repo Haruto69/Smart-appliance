@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="neon-box-cyan p-5 scan-line">
+        <h1 class="glitch text-4xl font-black text-[#00ffff]" data-text="⚡ ATTACK DASHBOARD - SMART CAMPUS SIMULATION PROJECT ⚡">
+            ⚡ ATTACK DASHBOARD - SMART CAMPUS SIMULATION PROJECT ⚡
+        </h1>
+        <div class="text-[#00ff41] mt-2 text-xl font-bold tracking-wide">
+            OPERATIONAL STATUS: <span class="text-[#ff0040] status-active">ARMED</span>
+        </div>
+    </div>
+    
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4"> 
+        <div class="neon-box p-6 card-attack border-[#00ff41]">
+            <div class="text-center">
+                <div class="text-5xl mb-2">💣</div>
+                <div class="text-[#00ff41] text-3xl font-black font-mono">{{ attacks|length }}</div>
+                <div class="text-gray-400 text-sm font-bold mt-1">TOTAL ATTACKS</div>
+            </div>
+        </div>
+        
+        <div class="neon-box-red p-6 card-attack">
+            <div class="text-center">
+                <div class="text-5xl mb-2">⚡</div>
+                <div class="text-[#ff0040] text-3xl font-black font-mono status-active" id="running-count">
+                    {{ attacks|selectattr('status', 'equalto', 'running')|list|length }}
+                </div>
+                <div class="text-gray-400 text-sm font-bold mt-1">ACTIVE NOW</div>
+            </div>
+        </div>
+        
+        <div class="neon-box p-6 card-attack border-[#00ffff]">
+            <div class="text-center">
+                <div class="text-5xl mb-2">✅</div>
+                <div class="text-[#00ffff] text-3xl font-black font-mono">
+                    {{ attacks|selectattr('status', 'equalto', 'completed')|list|length }}
+                </div>
+                <div class="text-gray-400 text-sm font-bold mt-1">SUCCESSFUL</div>
+            </div>
+        </div>
+        
+        <div class="neon-box-red p-6 card-attack">
+            <div class="text-center">
+                <div class="text-5xl mb-2">❌</div>
+                <div class="text-[#ff0040] text-3xl font-black font-mono">
+                    {{ attacks|selectattr('status', 'equalto', 'failed')|list|length }}
+                </div>
+                <div class="text-gray-400 text-sm font-bold mt-1">FAILED</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Attack Buttons -->
+    <div class="neon-box-cyan p-6">
+        <h2 class="text-2xl font-black text-[#00ffff] mb-4 tracking-wide">
+            <i class="fas fa-crosshairs"></i> QUICK DEPLOY
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <a href="/scan" class="attack-btn p-6 text-center block">
+                <div class="text-4xl mb-2">🎯</div>
+                <div class="font-black text-lg">SCANNING (NMAP)</div>
+            </a>
+            <a href="/brute-force" class="attack-btn p-6 text-center block">
+                <div class="text-4xl mb-2">💀</div>
+                <div class="font-black text-lg">BRUTE FORCE ATTACK</div>
+            </a>
+            <a href="/dos" class="attack-btn p-6 text-center block">
+                <div class="text-4xl mb-2">💥</div>
+                <div class="font-black text-lg">DENIAL OF SERVICE ATTACK</div>
+            </a>
+            <a href="/sql-injection" class="attack-btn p-6 text-center block">
+                <div class="text-4xl mb-2">💉</div>
+                <div class="font-black text-lg">SQL INJECTION</div>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Recent Attacks -->
+    <div class="neon-box p-6">
+        <h2 class="text-2xl font-black text-[#00ff41] mb-4 tracking-wide">
+            <i class="fas fa-history"></i> ATTACK LOG
+        </h2>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="border-b-2 border-[#00ff41]">
+                    <tr class="text-[#00ff41] font-bold">
+                        <th class="px-4 py-3 text-left">TYPE</th>
+                        <th class="px-4 py-3 text-left">TARGET</th>
+                        <th class="px-4 py-3 text-left">STATUS</th>
+                        <th class="px-4 py-3 text-left">TIME</th>
+                    </tr>
+                </thead>
+                <tbody id="attacks-table" class="font-mono">
+                    {% for attack in attacks[:10] %}
+                    <tr class="border-b border-gray-800 hover:bg-[rgba(0,255,65,0.05)] transition">
+                        <td class="px-4 py-3">
+                            <span class="neon-box px-3 py-1 text-sm font-bold">
+                                {{ attack.attack_type }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-[#00ffff]">{{ attack.target_ip }}</td>
+                        <td class="px-4 py-3">
+                            {% if attack.status == 'running' %}
+                            <span class="status-active font-bold">● ACTIVE</span>
+                            {% elif attack.status == 'completed' %}
+                            <span class="status-success font-bold">● SUCCESS</span>
+                            {% else %}
+                            <span class="text-[#ff0040] font-bold">● FAILED</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3 text-gray-400 text-sm">
+                            {{ attack.timestamp.strftime('%H:%M:%S') }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Target System -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="neon-box-red p-6">
+            <h2 class="text-2xl font-black text-[#ff0040] mb-4">
+                <i class="fas fa-bullseye"></i> PRIMARY TARGETS
+            </h2>
+            <div class="space-y-2">
+                <div class="neon-box p-3 hover:border-[#ff0040] transition cursor-pointer">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-[#00ff41]">RASPBERRY PI</div>
+                            <div class="text-sm text-gray-400 font-mono">192.168.1.100</div>
+                        </div>
+                        <div class="text-2xl">🔴</div>
+                    </div>
+                </div>
+                <div class="neon-box p-3 hover:border-[#ff0040] transition cursor-pointer">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="font-bold text-[#00ff41]">ESP32 CLUSTER</div>
+                            <div class="text-sm text-gray-400 font-mono">192.168.1.101-104</div>
+                        </div>
+                        <div class="text-2xl">🟢</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="neon-box-cyan p-6">
+            <h2 class="text-2xl font-black text-[#00ffff] mb-4">
+                <i class="fas fa-terminal"></i> SYSTEM STATUS
+            </h2>
+            <div class="terminal p-4 text-sm space-y-1">
+                <div>[<span class="text-[#00ff41]">OK</span>] Network tools initialized</div>
+                <div>[<span class="text-[#00ff41]">OK</span>] Attack modules loaded</div>
+                <div>[<span class="text-[#00ff41]">OK</span>] Database connected</div>
+                <div>[<span class="text-[#ffff00]">WARN</span>] Running in aggressive mode</div>
+                <div>[<span class="text-[#ff0040]">ALERT</span>] System armed and ready</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Auto-refresh
+    setInterval(() => {
+        fetch('/api/attacks')
+            .then(res => res.json())
+            .then(data => {
+                const running = data.filter(a => a.status === 'running').length;
+                document.getElementById('running-count').textContent = running;
+            })
+            .catch(() => {});
+    }, 3000);
+</script>
+{% endblock %}

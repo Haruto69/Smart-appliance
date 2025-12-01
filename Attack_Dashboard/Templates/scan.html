@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="glass-effect rounded-2xl p-6">
+        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400">
+            <i class="fas fa-radar"></i> Network Scanning
+        </h1>
+        <p class="text-gray-400 mt-2">Discover open ports, services, and vulnerabilities</p>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Scan Configuration -->
+        <div class="glass-effect rounded-2xl p-6">
+            <h2 class="text-2xl font-bold mb-6 text-cyan-400">
+                <i class="fas fa-cog"></i> Scan Configuration
+            </h2>
+            
+            <form id="scanForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">
+                        <i class="fas fa-bullseye mr-2"></i>Target IP Address
+                    </label>
+                    <input type="text" id="target_ip" name="target_ip" 
+                        placeholder="192.168.1.100" required
+                        class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-cyan-400 outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">
+                        <i class="fas fa-sliders-h mr-2"></i>Scan Type
+                    </label>
+                    <select id="scan_type" name="scan_type"
+                        class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-cyan-400 outline-none">
+                        <option value="basic">Basic Scan (Quick)</option>
+                        <option value="aggressive">Aggressive Scan (Deep)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="w-full attack-button text-white font-semibold py-4 rounded-lg text-lg">
+                    <i class="fas fa-play mr-2"></i>Start Scan
+                </button>
+            </form>
+            
+            <div id="scan-status" class="hidden mt-6 p-4 bg-yellow-900/30 border border-yellow-700/50 rounded-lg">
+                <div class="flex items-center">
+                    <i class="fas fa-spinner fa-spin text-yellow-400 text-2xl mr-3"></i>
+                    <div>
+                        <p class="font-semibold text-yellow-400">Scan in Progress</p>
+                        <p class="text-sm text-gray-400">This may take several minutes...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scan Information -->
+        <div class="glass-effect rounded-2xl p-6">
+            <h2 class="text-2xl font-bold mb-6 text-green-400">
+                <i class="fas fa-info-circle"></i> Scan Types
+            </h2>
+            
+            <div class="space-y-4">
+                <div class="bg-gray-800/50 rounded-lg p-4">
+                    <h3 class="font-bold text-cyan-400 mb-2">
+                        <i class="fas fa-bolt"></i> Basic Scan
+                    </h3>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• Quick port scan (1-10000)</li>
+                        <li>• Service version detection</li>
+                        <li>• Operating system detection</li>
+                        <li>• Duration: ~2-5 minutes</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-lg p-4 border-l-4 border-red-500">
+                    <h3 class="font-bold text-red-400 mb-2">
+                        <i class="fas fa-fire"></i> Aggressive Scan
+                    </h3>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• Full port scan (1-65535)</li>
+                        <li>• Deep service enumeration</li>
+                        <li>• Vulnerability scanning</li>
+                        <li>• Script scanning for exploits</li>
+                        <li>• Duration: ~10-30 minutes</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-blue-900/20 border border-blue-700/50 rounded-lg text-xs">
+                <p class="text-blue-400">
+                    <i class="fas fa-lightbulb mr-2"></i>
+                    <strong>Tip:</strong> Start with a basic scan to identify open ports, then use aggressive scan for detailed analysis.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Common Targets -->
+    <div class="glass-effect rounded-2xl p-6">
+        <h2 class="text-2xl font-bold mb-4 text-purple-400">
+            <i class="fas fa-server"></i> Smart Campus Targets
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button onclick="setTarget('192.168.1.100')" 
+                class="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg text-left transition">
+                <i class="fas fa-raspberry-pi text-red-400 text-2xl mb-2"></i>
+                <p class="font-semibold">Raspberry Pi</p>
+                <p class="text-sm text-gray-400">192.168.1.100</p>
+            </button>
+            
+            <button onclick="setTarget('192.168.1.101')" 
+                class="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg text-left transition">
+                <i class="fas fa-microchip text-blue-400 text-2xl mb-2"></i>
+                <p class="font-semibold">ESP32 #1</p>
+                <p class="text-sm text-gray-400">192.168.1.101</p>
+            </button>
+            
+            <button onclick="setTarget('192.168.1.102')" 
+                class="bg-gray-800 hover:bg-gray-700 p-4 rounded-lg text-left transition">
+                <i class="fas fa-microchip text-blue-400 text-2xl mb-2"></i>
+                <p class="font-semibold">ESP32 #2</p>
+                <p class="text-sm text-gray-400">192.168.1.102</p>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Scan Results -->
+    <div class="glass-effect rounded-2xl p-6">
+        <h2 class="text-2xl font-bold mb-4 text-cyan-400">
+            <i class="fas fa-list"></i> Recent Scan Results
+        </h2>
+        <div id="results-container">
+            <p class="text-gray-400 text-center py-8">No scans performed yet. Start a scan to see results.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setTarget(ip) {
+        document.getElementById('target_ip').value = ip;
+    }
+    
+    document.getElementById('scanForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = {
+            target_ip: document.getElementById('target_ip').value,
+            scan_type: document.getElementById('scan_type').value
+        };
+        
+        document.getElementById('scan-status').classList.remove('hidden');
+        
+        try {
+            const response = await fetch('/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+            }
+        } catch (error) {
+            console.error('Scan error:', error);
+            alert('Failed to start scan');
+        }
+    });
+    
+    // Auto-refresh results
+    setInterval(() => {
+        fetch('/api/scans')
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    const container = document.getElementById('results-container');
+                    container.innerHTML = data.slice(0, 5).map(scan => `
+                        <div class="bg-gray-800/50 rounded-lg p-4 mb-3">
+                            <div class="flex justify-between items-start mb-2">
+                                <p class="font-semibold text-green-400">${scan.target}</p>
+                                <span class="text-xs text-gray-400">${new Date(scan.timestamp).toLocaleString()}</span>
+                            </div>
+                            <div class="terminal p-3 rounded text-xs mt-2">
+                                ${scan.open_ports ? scan.open_ports.substring(0, 300) + '...' : 'Scanning...'}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            });
+    }, 5000);
+</script>
+{% endblock %}

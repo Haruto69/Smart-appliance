@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header with Warning -->
+    <div class="neon-box-red p-6 scan-line">
+        <h1 class="glitch text-4xl font-black text-[#ff0040]" data-text="☠️ ENHANCED DoS ATTACK SYSTEM ☠️">
+            ☠️ ENHANCED DoS ATTACK SYSTEM ☠️
+        </h1>
+        <div class="text-[#ffff00] mt-2 text-xl font-bold tracking-wide flex items-center">
+            <i class="fas fa-radiation-alt mr-3 text-2xl"></i>
+            EXTREME AGGRESSION MODE: <span class="text-[#ff0040] status-active ml-2">ARMED</span>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Attack Configuration -->
+        <div class="neon-box-cyan p-6">
+            <h2 class="text-2xl font-black mb-6 text-[#00ffff] tracking-wide">
+                <i class="fas fa-crosshairs"></i> ATTACK CONFIGURATION
+            </h2>
+            
+            <form id="dosForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-[#00ff41]">
+                        <i class="fas fa-bullseye mr-2"></i>TARGET IP ADDRESS
+                    </label>
+                    <input type="text" id="target_ip" name="target_ip" 
+                        placeholder="192.168.1.100" required
+                        class="w-full px-4 py-3 rounded-lg font-mono text-lg">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-[#00ff41]">
+                        <i class="fas fa-plug mr-2"></i>TARGET PORT
+                    </label>
+                    <input type="text" id="target_port" name="target_port" 
+                        placeholder="80" required
+                        class="w-full px-4 py-3 rounded-lg font-mono text-lg">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-[#00ff41]">
+                        <i class="fas fa-bomb mr-2"></i>ATTACK TYPE
+                    </label>
+                    <select id="attack_type" name="attack_type"
+                        class="w-full px-4 py-3 rounded-lg font-bold text-lg">
+                        <optgroup label="🔥 ENHANCED ATTACKS">
+                            <option value="ultra_syn">⚡ ULTRA SYN FLOOD (100 threads)</option>
+                            <option value="raw_syn">💀 RAW SOCKET SYN (requires root)</option>
+                            <option value="mega_udp">💥 MEGA UDP FLOOD (50 threads)</option>
+                            <option value="nuclear_http">🌐 NUCLEAR HTTP FLOOD (100 threads)</option>
+                            <option value="enhanced_slow">⏱️ ENHANCED SLOWLORIS (2000 connections)</option>
+                        </optgroup>
+                        <optgroup label="☢️ NUCLEAR OPTIONS">
+                            <option value="nuclear" style="color: #ff0040; font-weight: bold;">☢️ NUCLEAR - ALL PORTS (requires confirmation)</option>
+                            <option value="ultimate" style="color: #ff0040; font-weight: bold;">💣 ULTIMATE - ALL ATTACKS (requires confirmation)</option>
+                        </optgroup>
+                        <optgroup label="📊 LEGACY ATTACKS">
+                            <option value="syn_flood">SYN Flood (Basic)</option>
+                            <option value="udp_flood">UDP Flood (Basic)</option>
+                            <option value="icmp_flood">ICMP Flood</option>
+                            <option value="http_flood">HTTP Flood (Basic)</option>
+                            <option value="slowloris">Slowloris (Basic)</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-bold mb-2 text-[#00ff41]">
+                        <i class="fas fa-clock mr-2"></i>ATTACK DURATION (seconds)
+                    </label>
+                    <input type="number" id="duration" name="duration" 
+                        value="60" min="10" max="300"
+                        class="w-full px-4 py-3 rounded-lg font-mono text-lg">
+                    <p class="text-xs text-gray-400 mt-1">⚠️ Press Ctrl+C on server to stop immediately</p>
+                </div>
+                
+                <div class="neon-box-red p-4 border-2">
+                    <p class="text-[#ff0040] text-sm font-black flex items-center">
+                        <i class="fas fa-skull-crossbones mr-2 text-xl"></i>
+                        ⚠️ EXTREME WARNING ⚠️
+                    </p>
+                    <p class="text-[#ffff00] text-xs mt-2 leading-relaxed">
+                        Enhanced attacks are EXTREMELY aggressive with 50-100 threads. Can crash systems, 
+                        exhaust resources, and cause complete service disruption. Nuclear options attack 
+                        ALL ports or combine ALL attack vectors. USE ONLY ON AUTHORIZED TEST SYSTEMS.
+                    </p>
+                </div>
+                
+                <button type="submit" class="attack-btn w-full text-white font-black py-5 rounded-lg text-xl uppercase tracking-wider">
+                    <i class="fas fa-rocket mr-3"></i>LAUNCH ATTACK
+                </button>
+            </form>
+            
+            <div id="dos-status" class="hidden mt-6 neon-box-red p-4 animate-pulse">
+                <div class="flex items-center">
+                    <i class="fas fa-spinner fa-spin text-[#ff0040] text-3xl mr-4"></i>
+                    <div>
+                        <p class="font-black text-[#ff0040] text-lg">ATTACK IN PROGRESS</p>
+                        <p class="text-sm text-gray-400 font-mono" id="attack-info">Initializing...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Attack Types Info -->
+        <div class="neon-box p-6">
+            <h2 class="text-2xl font-black mb-6 text-[#00ff41] tracking-wide">
+                <i class="fas fa-info-circle"></i> ATTACK VECTORS
+            </h2>
+            
+            <div class="space-y-3 max-h-[500px] overflow-y-auto pr-2" style="scrollbar-width: thin;">
+                <div class="neon-box-red p-4 border-l-4 border-[#ff0040] card-attack">
+                    <h3 class="font-black text-[#ff0040] text-base mb-2 flex items-center">
+                        <i class="fas fa-bolt mr-2"></i> ⚡ ULTRA SYN FLOOD
+                    </h3>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        100 parallel hping3 instances with maximum packet size (65495 bytes) and random source IPs. 
+                        Floods SYN packets to exhaust connection tables and overwhelm TCP stack.
+                    </p>
+                    <div class="mt-2 text-xs font-mono text-[#00ffff]">Threads: 100 | Packet Size: 65495 bytes</div>
+                </div>
+                
+                <div class="neon-box-red p-4 border-l-4 border-[#ff0040] card-attack">
+                    <h3 class="font-black text-[#ff0040] text-base mb-2 flex items-center">
+                        <i class="fas fa-skull mr-2"></i> 💀 RAW SOCKET SYN
+                    </h3>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        Uses Scapy to craft raw TCP SYN packets with spoofed source IPs. Bypasses OS limitations 
+                        for maximum packet generation speed. Requires root privileges and Scapy library.
+                    </p>
+                    <div class="mt-2 text-xs font-mono text-[#ffff00]">⚠️ Requires: root + scapy</div>
+                </div>
+                
+                <div class="neon-box-red p-4 border-l-4 border-[#ff0040] card-attack">
+                    <h3 class="font-black text-[#ff0040] text-base mb-2 flex items-center">
+                        <i class="fas fa-explosion mr-2"></i> 💥 MEGA UDP FLOOD
+                    </h3>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        50 threads sending maximum-size UDP packets (65507 bytes) continuously. Overwhelms bandwidth 
+                        and processing capacity. Shows real-time packet count statistics.
+                    </p>
+                    <div class="mt-2 text-xs font-mono text-[#00ffff]">Threads: 50 | Packet Size: 65507 bytes</div>
+                </div>
+                
+                <div class="neon-box-red p-4 border-l-4 border-[#ff0040] card-attack">
+                    <h3 class="font-black text-[#ff0040] text-base mb-2 flex items-center">
+                        <i class="fas fa-globe mr-2"></i> 🌐 NUCLEAR HTTP FLOOD
+                    </h3>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        100 threads making rapid HTTP requests with random user agents. Sends 10 requests per 
+                        connection to maximize application layer impact. Tracks connection statistics.
+                    </p>
+                    <div class="mt-2 text-xs font-mono text-[#00ffff]">Threads: 100 | Requests/Connection: 10</div>
+                </div>
+                
+                <div class="neon-box-red p-4 border-l-4 border-[#ff0040] card-attack">
+                    <h3 class="font-black text-[#ff0040] text-base mb-2 flex items-center">
+                        <i class="fas fa-hourglass-half mr-2"></i> ⏱️ ENHANCED SLOWLORIS
+                    </h3>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        Opens 2000 initial connections and adds 100 new connections per 3-second cycle. 
+                        Keeps connections alive with minimal traffic to exhaust server connection limits.
+                    </p>
+                    <div class="mt-2 text-xs font-mono text-[#00ffff]">Initial: 2000 | Growth: 100/3s</div>
+                </div>
+                
+                <div class="neon-box-red p-4 border-l-4 border-[#ff0040] card-attack border-2">
+                    <h3 class="font-black text-[#ff0040] text-lg mb-2 flex items-center animate-pulse">
+                        <i class="fas fa-radiation-alt mr-2"></i> ☢️ NUCLEAR - ALL PORTS
+                    </h3>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        <span class="text-[#ff0040] font-bold">MAXIMUM AGGRESSION:</span> Attacks ALL 65,535 ports 
+                        simultaneously using 50 threads. Each thread launches hping3 SYN floods across port ranges. 
+                        <span class="text-[#ffff00]">Requires typing "NUCLEAR" to confirm.</span>
+                    </p>
+                    <div class="mt-2 text-xs font-mono text-[#ff0040]">⚠️ EXTREME - Ports: 65535 | Threads: 50</div>
+                </div>
+                
+                <div class="neon-box-red p-4 border-l-4 border-[#ff0040] card-attack border-2">
+                    <h3 class="font-black text-[#ff0040] text-lg mb-2 flex items-center animate-pulse">
+                        <i class="fas fa-bomb mr-2"></i> 💣 ULTIMATE - ALL ATTACKS
+                    </h3>
+                    <p class="text-xs text-gray-300 leading-relaxed">
+                        <span class="text-[#ff0040] font-bold">ULTIMATE DESTRUCTION:</span> Launches ALL attack 
+                        vectors simultaneously in parallel processes: Ultra SYN (100 threads) + Mega UDP (50 threads) 
+                        + Nuclear HTTP (100 threads) + Enhanced Slowloris (2000 connections). 
+                        <span class="text-[#ffff00]">Requires typing "ULTIMATE" to confirm.</span>
+                    </p>
+                    <div class="mt-2 text-xs font-mono text-[#ff0040]">⚠️ MAXIMUM - Total Threads: 250+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Target Presets -->
+    <div class="neon-box-cyan p-6">
+        <h2 class="text-2xl font-black mb-4 text-[#00ffff] tracking-wide">
+            <i class="fas fa-crosshairs"></i> QUICK TARGET PRESETS
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
+            <button onclick="setPort('22')" class="neon-box p-4 hover:border-[#00ffff] transition card-attack">
+                <p class="font-black text-[#00ffff] text-2xl">22</p>
+                <p class="text-xs text-gray-400 font-bold mt-1">SSH</p>
+            </button>
+            <button onclick="setPort('80')" class="neon-box p-4 hover:border-[#00ff41] transition card-attack">
+                <p class="font-black text-[#00ff41] text-2xl">80</p>
+                <p class="text-xs text-gray-400 font-bold mt-1">HTTP</p>
+            </button>
+            <button onclick="setPort('443')" class="neon-box p-4 hover:border-[#00ff41] transition card-attack">
+                <p class="font-black text-[#00ff41] text-2xl">443</p>
+                <p class="text-xs text-gray-400 font-bold mt-1">HTTPS</p>
+            </button>
+            <button onclick="setPort('21')" class="neon-box p-4 hover:border-[#00ffff] transition card-attack">
+                <p class="font-black text-[#00ffff] text-2xl">21</p>
+                <p class="text-xs text-gray-400 font-bold mt-1">FTP</p>
+            </button>
+            <button onclick="setPort('3306')" class="neon-box p-4 hover:border-[#ffff00] transition card-attack">
+                <p class="font-black text-[#ffff00] text-2xl">3306</p>
+                <p class="text-xs text-gray-400 font-bold mt-1">MySQL</p>
+            </button>
+            <button onclick="setPort('8080')" class="neon-box p-4 hover:border-[#ff0040] transition card-attack">
+                <p class="font-black text-[#ff0040] text-2xl">8080</p>
+                <p class="text-xs text-gray-400 font-bold mt-1">Alt HTTP</p>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Attack Presets -->
+    <div class="neon-box p-6">
+        <h2 class="text-2xl font-black mb-4 text-[#00ff41] tracking-wide">
+            <i class="fas fa-bolt"></i> ATTACK PRESETS
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <button onclick="setConfig('192.168.1.100', '80', 'nuclear_http', 60)" 
+                class="attack-btn p-5 text-left hover:scale-105 transition">
+                <i class="fas fa-globe text-3xl mb-2"></i>
+                <p class="font-black text-lg">WEB ASSAULT</p>
+                <p class="text-xs opacity-80">Nuclear HTTP Flood</p>
+            </button>
+            
+            <button onclick="setConfig('192.168.1.100', '22', 'ultra_syn', 60)" 
+                class="attack-btn p-5 text-left hover:scale-105 transition">
+                <i class="fas fa-terminal text-3xl mb-2"></i>
+                <p class="font-black text-lg">SSH CRUSH</p>
+                <p class="text-xs opacity-80">Ultra SYN Flood</p>
+            </button>
+            
+            <button onclick="setConfig('192.168.1.100', '53', 'mega_udp', 60)" 
+                class="attack-btn p-5 text-left hover:scale-105 transition">
+                <i class="fas fa-broadcast-tower text-3xl mb-2"></i>
+                <p class="font-black text-lg">DNS BLAST</p>
+                <p class="text-xs opacity-80">Mega UDP Flood</p>
+            </button>
+            
+            <button onclick="setConfig('192.168.1.100', '80', 'ultimate', 60)" 
+                class="attack-btn p-5 text-left hover:scale-105 transition border-4 border-[#ff0040] animate-pulse">
+                <i class="fas fa-radiation-alt text-3xl mb-2"></i>
+                <p class="font-black text-lg">☢️ TOTAL WAR</p>
+                <p class="text-xs opacity-80">All Attacks Combined</p>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Control Panel -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="neon-box-red p-6">
+            <h2 class="text-2xl font-black mb-4 text-[#ff0040] tracking-wide">
+                <i class="fas fa-stop-circle"></i> ATTACK CONTROL
+            </h2>
+            <div class="space-y-3">
+                <div class="terminal p-4">
+                    <p class="text-[#00ff41]">[INFO] Press Ctrl+C on server terminal to stop any attack immediately</p>
+                    <p class="text-[#00ffff]">[INFO] All attacks support graceful shutdown</p>
+                    <p class="text-[#ffff00]">[INFO] Automatic cleanup of background processes</p>
+                    <p class="text-[#ff0040]">[INFO] Nuclear/Ultimate attacks require confirmation</p>
+                </div>
+                <button onclick="alert('Stop attack by pressing Ctrl+C on the server terminal')" 
+                    class="w-full neon-box-red p-4 font-black text-[#ff0040] hover:bg-[#ff0040] hover:text-black transition">
+                    <i class="fas fa-hand-paper mr-2"></i>EMERGENCY STOP INFO
+                </button>
+            </div>
+        </div>
+        
+        <!-- Attack Log -->
+        <div class="neon-box p-6">
+            <h2 class="text-2xl font-black mb-4 text-[#00ffff] tracking-wide">
+                <i class="fas fa-history"></i> ATTACK LOG
+            </h2>
+            <div id="log-container" class="terminal p-4 rounded-lg min-h-[150px] max-h-[200px] overflow-y-auto">
+                <p class="text-[#00ff41]">[READY] Enhanced DoS Attack System Armed</p>
+                <p class="text-gray-500">[WAIT] Awaiting attack initiation...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setPort(port) {
+        document.getElementById('target_port').value = port;
+        document.getElementById('log-container').innerHTML += 
+            `<p class="text-[#00ffff]">[SET] Target port changed to ${port}</p>`;
+    }
+    
+    function setConfig(ip, port, attackType, duration) {
+        document.getElementById('target_ip').value = ip;
+        document.getElementById('target_port').value = port;
+        document.getElementById('attack_type').value = attackType;
+        document.getElementById('duration').value = duration;
+        
+        document.getElementById('log-container').innerHTML += 
+            `<p class="text-[#00ff41]">[PRESET] Configuration loaded: ${attackType} on ${ip}:${port}</p>`;
+    }
+    
+    document.getElementById('dosForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = {
+            target_ip: document.getElementById('target_ip').value,
+            target_port: document.getElementById('target_port').value,
+            attack_type: document.getElementById('attack_type').value,
+            duration: document.getElementById('duration').value
+        };
+        
+        // Check for nuclear attacks
+        if (formData.attack_type === 'nuclear' || formData.attack_type === 'ultimate') {
+            const confirmWord = formData.attack_type === 'nuclear' ? 'NUCLEAR' : 'ULTIMATE';
+            const userConfirm = prompt(`⚠️ WARNING: This is an EXTREME attack!\n\nType "${confirmWord}" to confirm:`);
+            
+            if (userConfirm !== confirmWord) {
+                alert('Attack cancelled - confirmation failed');
+                document.getElementById('log-container').innerHTML += 
+                    `<p class="text-[#ffff00]">[CANCELLED] ${formData.attack_type.toUpperCase()} attack cancelled by user</p>`;
+                return;
+            }
+        }
+        
+        const logContainer = document.getElementById('log-container');
+        logContainer.innerHTML = `
+            <p class="text-[#ffff00]">[INIT] Initializing ${formData.attack_type.toUpperCase()} attack...</p>
+            <p class="text-[#00ffff]">[TARGET] ${formData.target_ip}:${formData.target_port}</p>
+            <p class="text-[#00ffff]">[DURATION] ${formData.duration} seconds</p>
+            <p class="text-[#ff0040] animate-pulse">[LAUNCH] Attack launched!</p>
+            <p class="text-[#00ff41]">[INFO] Press Ctrl+C on server to stop</p>
+        `;
+        
+        document.getElementById('dos-status').classList.remove('hidden');
+        document.getElementById('attack-info').textContent = 
+            `${formData.attack_type.toUpperCase()} on ${formData.target_ip}:${formData.target_port} for ${formData.duration}s`;
+        
+        try {
+            const response = await fetch('/dos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                logContainer.innerHTML += `<p class="text-[#00ff41] mt-2">[SUCCESS] Attack request submitted successfully</p>`;
+                logContainer.innerHTML += `<p class="text-[#00ffff]">[EXECUTING] Attack running on server...</p>`;
+                
+                setTimeout(() => {
+                    logContainer.innerHTML += `<p class="text-[#ffff00]">[COMPLETE] Attack duration finished</p>`;
+                    document.getElementById('dos-status').classList.add('hidden');
+                }, parseInt(formData.duration) * 1000);
+            }
+        } catch (error) {
+            console.error('Attack error:', error);
+            logContainer.innerHTML += `<p class="text-[#ff0040] mt-2">[ERROR] ${error}</p>`;
+            document.getElementById('dos-status').classList.add('hidden');
+        }
+    });
+    
+    // Add attack type change handler to show warnings
+    document.getElementById('attack_type').addEventListener('change', function() {
+        const selected = this.value;
+        const logContainer = document.getElementById('log-container');
+        
+        if (selected === 'nuclear' || selected === 'ultimate') {
+            logContainer.innerHTML += 
+                `<p class="text-[#ff0040] animate-pulse">[⚠️] ${selected.toUpperCase()} attack selected - EXTREME AGGRESSION</p>`;
+        } else if (selected.includes('ultra') || selected.includes('mega') || selected.includes('nuclear')) {
+            logContainer.innerHTML += 
+                `<p class="text-[#ffff00]">[⚡] ${selected.toUpperCase()} attack selected - High intensity</p>`;
+        }
+    });
+</script>
+{% endblock %}
