@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building 2 Control - Smart Campus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="navbar-brand">
+            🏢 Smart Campus Security
+        </a>
+        <div class="navbar-menu">
+            <a href="{{ url_for('index') }}">Dashboard</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <div class="user-info">
+                <span>👤 {{ username }}</span>
+                <a href="{{ url_for('logout') }}" style="color: white;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="control-container">
+        <a href="{{ url_for('index') }}" class="back-btn">← Back to Dashboard</a>
+
+        <div class="control-header">
+            <h1>🏗️ Building 2 Control</h1>
+            <p>Integrated Security & Environmental Control</p>
+        </div>
+
+        {% if status.error %}
+        <div class="error-message">
+            ⚠️ {{ status.error }}
+            <br><small>Ensure ESP32 at {{ device.ip }} is powered on and connected to WiFi</small>
+        </div>
+        {% endif %}
+
+        <div class="status-panel">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary);">System Status</h2>
+            <div class="status-grid" id="status-container">
+                <div class="status-item">
+                    <strong>Mode</strong>
+                    <div class="status-value">{{ status.mode if status.mode is defined else 'Unknown' }}</div>
+                </div>
+                <div class="status-item">
+                    <strong>LED Status</strong>
+                    <div class="status-value">{{ 'ON' if status.led_state else 'OFF' if status.led_state is defined else 'Unknown' }}</div>
+                </div>
+                <div class="status-item">
+                    <strong>Light Level</strong>
+                    <div class="status-value">{{ status.ldr_value if status.ldr_value is defined else 'N/A' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary);">LED Controls</h2>
+            <div class="control-buttons">
+                <form method="POST" action="/building2/led/on">
+                    <button type="submit" class="btn btn-on">Turn ON</button>
+                </form>
+                <form method="POST" action="/building2/led/off">
+                    <button type="submit" class="btn btn-off">Turn OFF</button>
+                </form>
+                <form method="POST" action="/building2/led/toggle">
+                    <button type="submit" class="btn btn-toggle">Toggle</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary);">Operation Mode</h2>
+            <div class="control-buttons">
+                <form method="POST" action="/building2/mode/auto">
+                    <button type="submit" class="btn btn-auto">Auto Mode</button>
+                </form>
+                <form method="POST" action="/building2/mode/manual">
+                    <button type="submit" class="btn btn-manual">Manual Mode</button>
+                </form>
+            </div>
+            <p style="text-align: center; color: var(--text-light); margin-top: 1rem; font-size: 0.95rem;">
+                <strong>Auto Mode:</strong> Intelligent occupancy-based control<br>
+                <strong>Manual Mode:</strong> Use manual controls above<br>
+                🔄 Status updates every 2 seconds
+            </p>
+        </div>
+
+        <div class="status-panel">
+            <h2 style="margin-bottom: 1rem; color: var(--primary);">Active Sensors</h2>
+            <div class="sensor-list">
+                <div class="sensor-item">MQ-2 Smoke Detector - Fire Detection & Emergency Response</div>
+                <div class="sensor-item">RFID Security - Multi-Level Access Control System</div>
+                <div class="sensor-item">PIR Motion Detection - Intelligent Occupancy Tracking</div>
+                <div class="sensor-item">Sound Level Monitor - Acoustic Monitoring for Security</div>
+                <div class="sensor-item">Smart LED Control - Automated Energy Management</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateStatus() {
+            fetch('/api/building2/status')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('status-container');
+                    if (data.error) {
+                        container.innerHTML = `
+                            <div class="status-item">
+                                <strong>Error</strong>
+                                <div class="status-value" style="color: #DC2626;">${data.error}</div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    container.innerHTML = `
+                        <div class="status-item">
+                            <strong>Mode</strong>
+                            <div class="status-value">${data.mode ?? 'Unknown'}</div>
+                        </div>
+                        <div class="status-item">
+                            <strong>LED Status</strong>
+                            <div class="status-value">${data.led_state !== undefined ? (data.led_state ? 'ON' : 'OFF') : 'Unknown'}</div>
+                        </div>
+                        <div class="status-item">
+                            <strong>Light Level</strong>
+                            <div class="status-value">${data.ldr_value ?? 'N/A'}</div>
+                        </div>
+                    `;
+                })
+                .catch(() => {
+                    document.getElementById('status-container').innerHTML = `
+                        <div class="status-item">
+                            <strong>Error</strong>
+                            <div class="status-value" style="color: #DC2626;">Connection Failed</div>
+                        </div>
+                    `;
+                });
+        }
+        updateStatus();
+        setInterval(updateStatus, 2000);
+    </script>
+</body>
+</html>

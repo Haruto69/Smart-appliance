@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Campus Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="navbar-brand">
+            🏢 Smart Campus Security
+        </a>
+        <div class="navbar-menu">
+            <a href="{{ url_for('index') }}">Dashboard</a>
+            <a href="{{ url_for('about') }}">About</a>
+            <div class="user-info">
+                <span>👤 {{ username }}</span>
+                <a href="{{ url_for('logout') }}" style="color: white;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Smart Campus Control Center</h1>
+            <p>Monitor and manage IoT devices across campus zones</p>
+        </header>
+
+        <main class="zones-grid">
+            <!-- Parking Zone -->
+            <a href="{{ url_for('parking') }}" class="zone-card">
+                <div class="zone-icon">🚗</div>
+                <h3>Parking Area</h3>
+                <div class="sensor-list">
+                    <div class="sensor-item">Air Quality Sensor (MQ-135)</div>
+                    <div class="sensor-item">Soil Moisture Sensor</div>
+                    <div class="sensor-item">Ultrasonic Sensor (HC-SR04)</div>
+                    <div class="sensor-item">IR Sensor</div>
+                    <div class="sensor-item">LDR Light Sensor</div>
+                </div>
+                <span class="status-badge">View Controls</span>
+            </a>
+
+            <!-- Park Zone -->
+            <a href="{{ url_for('park') }}" class="zone-card">
+                <div class="zone-icon">🌳</div>
+                <h3>Park Zone</h3>
+                <div class="sensor-list">
+                    <div class="sensor-item">Soil Moisture Monitoring</div>
+                    <div class="sensor-item">LDR Light Control</div>
+                    <div class="sensor-item">LED Automation System</div>
+                    <div class="sensor-item">Environmental Sensors</div>
+                </div>
+                <span class="status-badge">View Controls</span>
+            </a>
+
+            <!-- Building 1 -->
+            <a href="{{ url_for('building1') }}" class="zone-card">
+                <div class="zone-icon">🏢</div>
+                <h3>Building 1</h3>
+                <div class="sensor-list">
+                    <div class="sensor-item">MQ-2 Gas Sensor</div>
+                    <div class="sensor-item">RFID Access Control</div>
+                    <div class="sensor-item">PIR Motion Sensor</div>
+                    <div class="sensor-item">Sound Sensor</div>
+                    <div class="sensor-item">LED Control System</div>
+                </div>
+                <span class="status-badge">View Controls</span>
+            </a>
+
+            <!-- Building 2 -->
+            <a href="{{ url_for('building2') }}" class="zone-card">
+                <div class="zone-icon">🏗️</div>
+                <h3>Building 2</h3>
+                <div class="sensor-list">
+                    <div class="sensor-item">MQ-2 Smoke Detection</div>
+                    <div class="sensor-item">RFID Security System</div>
+                    <div class="sensor-item">PIR Motion Detection</div>
+                    <div class="sensor-item">Sound Level Monitor</div>
+                    <div class="sensor-item">Automated LED Control</div>
+                </div>
+                <span class="status-badge">View Controls</span>
+            </a>
+        </main>
+    </div>
+</body>
+</html>
